@@ -277,10 +277,10 @@ const FRONTEND_HTML = `
                 let amt = parseFloat(input.value); if(amt > bonusBal || amt <= 0) return;
                 bonusBal = (bonusBal - amt).toFixed(2); document.getElementById('bonus-display').innerText = bonusBal;
                 roomStates[coin].hasBet = true; roomStates[coin].amt = amt;
-                fetch(`/place-bet?asset=${coin}&amount=${amt}`);
+                fetch('/place-bet?asset=${coin}&amount=${amt}');
                 btn.innerText = 'ORDER RUNNING'; btn.style.background = '#111520'; btn.disabled = true;
             } else if(btn.innerText.includes('CASH')) {
-                fetch(`/cashout?asset=${coin}`).then(r => r.json()).then(res => {
+                fetch('/cashout?asset=${coin}').then(r => r.json()).then(res => {
                     if(res.status === 'SUCCESS') {
                         depositBal = (parseFloat(depositBal) + res.winAmount).toFixed(2);
                         document.getElementById('deposit-display').innerText = depositBal;
