@@ -327,7 +327,7 @@ function executeFlight(coin) {
 function sendEvent(data) { const payload = 'data: ${JSON.stringify(data)}\n\n'; clients.forEach(c => c.write(payload)); }
 
 const server = http.createServer((req, res) => {
-    const urlObj = new URL(req.url, `http://${req.headers.host}`);
+    const urlObj = new URL(req.url, 'http://${req.headers.host}');
     if (urlObj.pathname === '/stream') {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
         clients.push(res); req.on('close', () => { clients = clients.filter(c => c !== res); }); return;
