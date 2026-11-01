@@ -324,7 +324,7 @@ function executeFlight(coin) {
     }
 }
 
-function sendEvent(data) { const payload = `data: ${JSON.stringify(data)}\n\n`; clients.forEach(c => c.write(payload)); }
+function sendEvent(data) { const payload = 'data: ${JSON.stringify(data)}\n\n'; clients.forEach(c => c.write(payload)); }
 
 const server = http.createServer((req, res) => {
     const urlObj = new URL(req.url, `http://${req.headers.host}`);
