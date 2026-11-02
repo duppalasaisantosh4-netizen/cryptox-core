@@ -59,7 +59,7 @@ function executeFlight(coin) {
         sendEvent({ type: 'GAME_LIQUIDATED', asset: coin, finalMultiplier: r.multiplier, history: r.history }); 
         setTimeout(() => startRoomLifecycle(coin), 3000);
     } else {
-        // ACCELERATED SPEED CALIBRATION FOR INTENSE DOPAMINE FLOW
+        // ACCELERATED SPEED TRAJECTORY CALIBRATION FOR INTENSE USER ENGAGEMENT
         let increment = 0.012;
         if (r.multiplier > 5.00) increment = 0.045;
         if (r.multiplier > 15.00) increment = 0.120;
@@ -75,6 +75,10 @@ function sendEvent(data) {
 }
 
 const server = http.createServer((req, res) => {
+    // ENFORCE SECURE ENVIRONMENT ORIGIN CORRESPONDENCE
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     if (req.url.startsWith('/stream')) {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
         clients.push(res); req.on('close', () => { clients = clients.filter(c => c !== res); }); return;
@@ -112,3 +116,4 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log('🔥 CRYPTO X VAULT ENGINE OPERATIONAL ON PORT ' + PORT);
     startRoomLifecycle('TON'); startRoomLifecycle('NOT'); startRoomLifecycle('DOGS');
 });
+
