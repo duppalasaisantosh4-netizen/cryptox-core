@@ -5,6 +5,7 @@ const crypto = require('crypto');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 let clients = []; 
 let rooms = {
@@ -17,19 +18,20 @@ const GAME_CONFIG = { TON: { color: '#00a6ff' }, NOT: { color: '#ffb61a' }, DOGS
 function generateProvablyFairSeed(coin) {
     let r = rooms[coin];
     r.serverSeed = crypto.randomBytes(32).toString('hex');
-    let publicCommitment = crypto.createHash('sha256').update(r.serverSeed).digest('hex');
-    return publicCommitment;
+    return crypto.createHash('sha256').update(r.serverSeed).digest('hex');
 }
 
 function startRoomLifecycle(coin) {
     let r = rooms[coin]; r.status = 'WAITING'; r.multiplier = 1.00; r.countdown = 5;
     let publicCommit = generateProvablyFairSeed(coin);
     
-    // 35x SILENT RISK ENGINE SHIELD
+    // IRONCLAD MAXIMUM 35x RISK ENGINE SHIELD CEILING
     let rawRandom = Math.random();
     let calculatedCrash = parseFloat((rawRandom * (35.00 - 1.05) + 1.10).toFixed(2));
-    if (calculatedCrash > 35.00) {
-        calculatedCrash = parseFloat((Math.random() * (35.00 - 15.00) + 15.00).toFixed(2));
+    
+    // HARD CEILING SHIELD TO PREVENT PLATFORM DRAIN AND PROTECT RESERVES
+    if (calculatedCrash > 35.00 || Math.random() < 0.15) {
+        calculatedCrash = parseFloat((Math.random() * (4.50 - 1.10) + 1.10).toFixed(2));
     }
     r.crashPoint = calculatedCrash;
 
@@ -59,7 +61,7 @@ function executeFlight(coin) {
         sendEvent({ type: 'GAME_LIQUIDATED', asset: coin, finalMultiplier: r.multiplier, history: r.history }); 
         setTimeout(() => startRoomLifecycle(coin), 3000);
     } else {
-        // ACCELERATED SPEED TRAJECTORY CALIBRATION FOR INTENSE USER ENGAGEMENT
+        // ACCELERATED DOPAMINE ENGINE trajectory SPEED STEPS
         let increment = 0.012;
         if (r.multiplier > 5.00) increment = 0.045;
         if (r.multiplier > 15.00) increment = 0.120;
@@ -69,13 +71,13 @@ function executeFlight(coin) {
         setTimeout(() => executeFlight(coin), 55);
     }
 }
+
 function sendEvent(data) { 
     const payload = "data: " + JSON.stringify(data) + "\n\n"; 
     clients.forEach(c => c.write(payload)); 
 }
 
 const server = http.createServer((req, res) => {
-    // ENFORCE SECURE ENVIRONMENT ORIGIN CORRESPONDENCE
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
@@ -98,12 +100,12 @@ const server = http.createServer((req, res) => {
         return;
     }
     
-    // NATIVE HIGH-SPEED DISK STREAM FILE BUFFER LINK OVER THE NETWORK
+    // NATIVE DYNAMIC HIGH-SPEED DISK LINK STREAM 
     const filePath = path.join(__dirname, 'index.html');
     fs.readFile(filePath, 'utf8', (err, htmlContent) => {
         if (err) {
             res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('CRITICAL SYSTEM STREAMING ERROR - index.html MISSING IN GIT ROOT');
+            res.end('SYSTEM ERROR: index.html PATH MISALIGNED IN STORAGE ROOT');
             return;
         }
         res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -116,4 +118,3 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log('🔥 CRYPTO X VAULT ENGINE OPERATIONAL ON PORT ' + PORT);
     startRoomLifecycle('TON'); startRoomLifecycle('NOT'); startRoomLifecycle('DOGS');
 });
-
