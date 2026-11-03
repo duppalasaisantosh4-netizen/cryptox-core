@@ -13,7 +13,6 @@ let rooms = {
     NOT: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] },
     DOGS: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] }
 };
-const GAME_CONFIG = { TON: { color: '#00a6ff' }, NOT: { color: '#ffb61a' }, DOGS: { color: '#f6465d' } };
 
 function generateProvablyFairSeed(coin) {
     let r = rooms[coin];
@@ -25,11 +24,10 @@ function startRoomLifecycle(coin) {
     let r = rooms[coin]; r.status = 'WAITING'; r.multiplier = 1.00; r.countdown = 5;
     let publicCommit = generateProvablyFairSeed(coin);
     
-    // IRONCLAD MAXIMUM 35x RISK ENGINE SHIELD CEILING
+    // IRONCLAD 35x RISK GOVERNOR SHIELD
     let rawRandom = Math.random();
     let calculatedCrash = parseFloat((rawRandom * (35.00 - 1.05) + 1.10).toFixed(2));
     
-    // HARD CEILING SHIELD TO PREVENT PLATFORM DRAIN AND PROTECT RESERVES
     if (calculatedCrash > 35.00 || Math.random() < 0.15) {
         calculatedCrash = parseFloat((Math.random() * (4.50 - 1.10) + 1.10).toFixed(2));
     }
@@ -61,7 +59,6 @@ function executeFlight(coin) {
         sendEvent({ type: 'GAME_LIQUIDATED', asset: coin, finalMultiplier: r.multiplier, history: r.history }); 
         setTimeout(() => startRoomLifecycle(coin), 3000);
     } else {
-        // ACCELERATED DOPAMINE ENGINE trajectory SPEED STEPS
         let increment = 0.012;
         if (r.multiplier > 5.00) increment = 0.045;
         if (r.multiplier > 15.00) increment = 0.120;
@@ -81,6 +78,12 @@ const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
+    // REFRESH HEARTBEAT ROUTER - KEEPS RENDER INSTANCE AWAKE 24/7/365
+    if (req.url.startsWith('/keep-alive-ping')) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'AWAKE', timestamp: Date.now() }));
+        return;
+    }
     if (req.url.startsWith('/stream')) {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
         clients.push(res); req.on('close', () => { clients = clients.filter(c => c !== res); }); return;
@@ -100,12 +103,11 @@ const server = http.createServer((req, res) => {
         return;
     }
     
-    // NATIVE DYNAMIC HIGH-SPEED DISK LINK STREAM 
     const filePath = path.join(__dirname, 'index.html');
     fs.readFile(filePath, 'utf8', (err, htmlContent) => {
         if (err) {
             res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('SYSTEM ERROR: index.html PATH MISALIGNED IN STORAGE ROOT');
+            res.end('CRITICAL ARCHITECTURE ERROR: index.html PATH MISALIGNED IN STORAGE ROOT');
             return;
         }
         res.writeHead(200, { 'Content-Type': 'text/html' });
