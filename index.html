@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Crypto X Premium Terminal</title>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; touch-action: manipulation; }
         body { background-color: #02040a; color: #ffffff; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at top right, #091124, #02040a); }
         .phone-frame { width: 100%; height: 100%; max-width: 412px; max-height: 892px; background: #040712; display: flex; flex-direction: column; position: relative; overflow: hidden; border: 2px solid #142247; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
-        .phone-header { background: #080f1f; padding: 14px 20px; border-bottom: 1px solid #14254d; display: flex; justify-content: space-between; align-items: center; height: 52px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .phone-header { background: #080f1f; padding: 14px 20px; border-bottom: 1px solid #14254d; display: flex; justify-content: space-between; align-items: center; height: 52px; z-index: 10; }
         .logo-box { font-weight: 900; font-size: 16px; color: #ffb61a; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 12px rgba(255,182,26,0.4); }
-        .nav-actions { display: flex; justify-content: space-between; gap: 6px; padding: 10px 14px; background: #050a17; min-height: 44px; align-items: center; border-bottom: 1px solid #0f1c3a; }
-        .nav-act-btn { background: linear-gradient(180deg, #1a2e5c, #0e1c3a); border: 1px solid #29468a; color: #b0c7ff; font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.15s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-actions { display: flex; justify-content: space-between; gap: 6px; padding: 10px 14px; background: #050a17; min-height: 44px; align-items: center; border-bottom: 1px solid #0f1c3a; z-index: 10; }
+        .nav-act-btn { background: linear-gradient(180deg, #1a2e5c, #0e1c3a); border: 1px solid #29468a; color: #b0c7ff; font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.15s ease; }
         .nav-act-btn:active { background: #29468a; color: #ffffff; transform: scale(0.96); }
-        .hud-row { display: flex; justify-content: space-between; padding: 10px 14px; background: #060c1c; gap: 10px; min-height: 56px; }
-        .hud-card { flex: 1; background: rgba(10, 20, 42, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 8px 12px; border-radius: 12px; border: 1px solid #1a3266; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 1px 2px rgba(255,255,255,0.05); }
+        .hud-row { display: flex; justify-content: space-between; padding: 10px 14px; background: #060c1c; gap: 10px; min-height: 56px; z-index: 10; }
+        .hud-card { flex: 1; background: rgba(10, 20, 42, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 8px 12px; border-radius: 12px; border: 1px solid #1a3266; display: flex; flex-direction: column; justify-content: center; }
         .hud-label { font-size: 8px; color: #7892cc; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; }
-        .hud-val { font-size: 15px; font-weight: 900; font-family: monospace; margin-top: 2px; text-shadow: 0 0 8px rgba(255,255,255,0.1); }
-        .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .hud-val { font-size: 15px; font-weight: 900; font-family: monospace; margin-top: 2px; }
+        .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 5; }
         .page { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .active-page { display: flex; }
         /* PREMIUM MINING MATRIX PANEL */
@@ -29,16 +29,15 @@
         .outer-bar { width: 100%; height: 9px; background: #02040a; border-radius: 5px; overflow: hidden; border: 1px solid #162a54; }
         .inner-bar { height: 100%; width: 0%; transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .tap-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-        .tap-zone { width: 160px; height: 160px; border-radius: 80px; background: radial-gradient(circle at 30% 30%, #ffc44d, #ea8c00); display: flex; align-items: center; justify-content: center; font-size: 76px; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 0 40px rgba(234,140,0,0.5), inset 0 4px 10px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.4); position: relative; user-select: none; transition: transform 0.05s ease; border: 3px solid rgba(255,255,255,0.2); }
+        .tap-zone { width: 160px; height: 160px; border-radius: 80px; background: radial-gradient(circle at 30% 30%, #ffc44d, #ea8c00); display: flex; align-items: center; justify-content: center; font-size: 76px; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 0 40px rgba(234,140,0,0.5), inset 0 4px 10px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.4); position: relative; user-select: none; transition: transform 0.05s ease; border: 3px solid rgba(255,255,255,0.2); z-index: 6; }
         .tap-zone:active { transform: scale(0.92); }
-        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s ease-out forwards; pointer-events: none; text-shadow: 0 0 10px rgba(16,185,129,0.7); }
+        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s ease-out forwards; pointer-events: none; text-shadow: 0 0 10px rgba(16,185,129,0.7); z-index: 10; }
         @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.8); } 100% { opacity: 0; transform: translateY(-90px) scale(1.4); } }
         .msg-desc { font-size: 11px; color: #6277a1; text-align: center; margin: 0 12px; line-height: 1.6; font-weight: 600; }
-        .launch-btn { width: 100%; background: linear-gradient(90deg, #10b981, #008be3); border: none; padding: 16px; border-radius: 14px; color: white; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 20px rgba(0,140,227,0.4); letter-spacing: 0.7px; transition: all 0.15s ease; border: 1px solid rgba(255,255,255,0.1); }
+        .launch-btn { width: 100%; background: linear-gradient(90deg, #10b981, #008be3); border: none; padding: 16px; border-radius: 14px; color: white; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 20px rgba(0,140,227,0.4); letter-spacing: 0.7px; transition: all 0.15s ease; border: 1px solid rgba(255,255,255,0.1); z-index: 6; }
         .launch-btn:active { transform: scale(0.98); opacity: 0.9; }
         .footer-row { display: flex; justify-content: space-between; padding: 6px 6px 0 6px; }
         .foot-link { color: #475a8a; font-size: 11px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         /* SPACED-OUT GAME ARENA LAYOUT */
         #page-2 { gap: 10px; }
         .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 1px solid #0f1e3d; margin-bottom: 2px; }
@@ -51,21 +50,23 @@
         .history-strip::-webkit-scrollbar { height: 3px; }
         .history-strip::-webkit-scrollbar-thumb { background: #1b3266; border-radius: 2px; }
         .hist-pill { display: inline-block; background: #080f21; border: 1px solid #1b3266; color: #10b981; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        
         /* STACKED STAKE DESK WIDE-BUTTON INFRASTRUCTURE */
         .bet-desk-grid { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
         .input-row-wrap { display: flex; gap: 8px; width: 100%; height: 36px; }
         .stake-inp { width: 100%; height: 100%; background: #020409; color: #ffb61a; border: 1px solid #1b3266; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 4px rgba(0,0,0,0.6); }
         .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #1d2d54, #111a36); border: 1px solid #2e437c; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); transition: all 0.1s ease; }
         .wide-action-btn:active { transform: scale(0.97); }
-
-        /* INTERACTIVE MODALS & DRAWER SPECIFICS */
+        /* INTERACTIVE MODALS & FIXED VISIBILITY CHAT DRAWER OVERRIDES */
         .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2,3,7,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-frame { width: 100%; background: #070c19; border: 1px solid #1f3970; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
         .modal-title { font-size: 14px; font-weight: 900; color: #ffb61a; text-transform: uppercase; letter-spacing: 0.5px; }
         .modal-body-text { font-size: 12px; color: #768ab3; line-height: 1.5; font-weight: 500; }
-        .chat-drawer { position: absolute; top: 0; right: -280px; width: 280px; height: 100%; background: rgba(3,6,15,0.99); border-left: 2px solid #1b3266; z-index: 200; transition: right 0.25s cubic-bezier(0.1, 0.9, 0.2, 1); display: flex; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.6); }
-        .chat-drawer-open { right: 0; }
-        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #13244d; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #a3beff; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #233e7d; border-right: none; }
+        
+        /* OVERRIDE SYSTEM: REMOVED NEGATIVE POSITION TO PREVENT SCREEN FREEZES ON IPHONE VIEWPORTS */
+        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: rgba(3,6,15,0.99); border-left: 2px solid #1b3266; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.6); pointer-events: auto; }
+        .chat-drawer-open { display: flex !important; }
+        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #13244d; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #a3beff; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #233e7d; border-right: none; pointer-events: auto; }
         .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
         .chat-msg { background: #050a14; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #112042; font-size: 11px; }
         .chat-input-row { display: flex; gap: 4px; height: 36px; }
@@ -82,17 +83,20 @@
         </div>
     </div>
     
-    <div id="chat-panel" class="chat-drawer">
-        <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
-        <div style="font-size:12px; font-weight:800; color:#ffb61a; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
-        <div class="chat-messages" id="chat-box-stream">
-            <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
-            <div class="chat-msg"><b style="color:#ffb61a;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
-            <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
-        </div>
-        <div class="chat-input-row">
-            <input type="text" id="chat-message-input" class="chat-inp" placeholder="Type message...">
-            <button class="nav-act-btn" style="padding:0 12px;" onclick="sendChatMessage()">Send</button>
+    <!-- WRAPPED CHAT DRAWER INSIDE INDEPENDENT VISIBILITY LAYER TO UNBLOCK PHONE TOUCH ENGINES -->
+    <div style="position: absolute; top:0; right:0; height:100%; z-index:150; pointer-events:none;">
+        <div id="chat-panel" class="chat-drawer" style="pointer-events: auto;">
+            <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
+            <div style="font-size:12px; font-weight:800; color:#ffb61a; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
+            <div class="chat-messages" id="chat-box-stream">
+                <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
+                <div class="chat-msg"><b style="color:#ffb61a;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
+                <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-message-input" class="chat-inp" placeholder="Type message...">
+                <button class="nav-act-btn" style="padding:0 12px;" onclick="sendChatMessage()">Send</button>
+            </div>
         </div>
     </div>
 
@@ -147,7 +151,7 @@
                 <span style="font-size:10px; font-weight:900; color:#ffb61a; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
             </div>
 
-            <!-- TONCOIN OVERHAULED CARD -->
+            <!-- TONCOIN DE-CONGESTED STAND CARD -->
             <div class="chart-card" id="card-TON">
                 <div class="chart-header">
                     <span class="coin-badge" style="color: #00a6ff;">💎 TON Engine</span>
@@ -163,7 +167,7 @@
                 </div>
             </div>
 
-            <!-- NOTCOIN OVERHAULED CARD -->
+            <!-- NOTCOIN DE-CONGESTED STAND CARD -->
             <div class="chart-card" id="card-NOT">
                 <div class="chart-header">
                     <span class="coin-badge" style="color: #ffb61a;">🚀 NOT Canvas</span>
@@ -179,7 +183,7 @@
                 </div>
             </div>
 
-            <!-- DOGS OVERHAULED CARD -->
+            <!-- DOGS DE-CONGESTED STAND CARD -->
             <div class="chart-card" id="card-DOGS">
                 <div class="chart-header">
                     <span class="coin-badge" style="color: #f6465d;">🐶 DOGS Arena</span>
@@ -208,7 +212,7 @@
         DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0 }
     };
 
-    // HIGH-FIDELITY WEB AUDIO DOPAMINE SYNTHESIZER NODES
+    // AUDIO CHIP SYNTHESIS ARRAYS
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSynthSound(freq, type, duration, vol) {
         try {
@@ -303,43 +307,45 @@
         const valText = document.getElementById('val-' + coin); const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
         switch(data.type) {
             case 'COUNTDOWN':
-valText.innerText = data.seconds + 's'; valText.style.color = '#ffb61a';
-if(!roomStates[coin].hasBet) { btn.innerText = 'OPEN MARGIN'; btn.style.background = 'linear-gradient(180deg, #10b981, #059669)'; btn.disabled = false; input.disabled = false; }
-break;
-case 'TAKEOFF':
-input.disabled = true;
-if(roomStates[coin].hasBet) { btn.innerText = 'CASH OUT POSITION'; btn.style.background = 'linear-gradient(180deg, #3b82f6, #1d4ed8)'; btn.disabled = false; }
-else { btn.innerText = 'SPECTATING'; btn.style.background = '#0d1527'; btn.disabled = true; }
-break;
-case 'TICK':
-valText.innerText = data.multiplier.toFixed(2) + 'x'; valText.style.color = '#10b981'; drawCurve(coin, data.multiplier);
-break;
-case 'GAME_LIQUIDATED':
-playCrashSound(); valText.innerText = data.finalMultiplier.toFixed(2) + 'x'; valText.style.color = '#ef4444';
-btn.innerText = 'LIQUIDATED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
-roomStates[coin].hasBet = false; roomStates[coin].isCashedOut = false; drawCurve(coin, 1.00); if(data.history) renderHistory(coin, data.history);
-break;
-}
-};
-['TON', 'NOT', 'DOGS'].forEach(coin => {
-const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
-btn.onclick = function() {
-if(btn.innerText.includes('OPEN')) {
-let amt = parseFloat(input.value); if(amt > bonusWalletBal || amt <= 0) return;
-bonusWalletBal = (bonusWalletBal - amt).toFixed(2); document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
-roomStates[coin].hasBet = true; roomStates[coin].amt = amt; roomStates[coin].isCashedOut = false;
-fetch('/place-bet?asset=' + coin + '&amount=' + amt); btn.innerText = 'POSITION SECURED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
-} else if(btn.innerText.includes('CASH')) {
-playCashoutSound();
-fetch('/cashout?asset=' + coin).then(r => r.json()).then(res => {
-if(res.status === 'SUCCESS') {
-trueWalletBal = (parseFloat(trueWalletBal) + res.winAmount).toFixed(2);
-document.getElementById('true-wallet-display').innerText = trueWalletBal;
-btn.innerText = 'FILLED +' + res.winAmount; btn.style.background = '#0a0f1d'; btn.disabled = true;
-let state = roomStates[coin]; state.isCashedOut = true;
-if(state.pts.length > 0) { state.cashedOutY = state.pts[state.pts.length - 1].y; }
-}
-});
-}
-};
-});
+            case 'COUNTDOWN':
+                valText.innerText = data.seconds + 's'; valText.style.color = '#ffb61a';
+                if(!roomStates[coin].hasBet) { btn.innerText = 'OPEN MARGIN'; btn.style.background = 'linear-gradient(180deg, #10b981, #059669)'; btn.disabled = false; input.disabled = false; }
+                break;
+            case 'TAKEOFF':
+                input.disabled = true;
+                if(roomStates[coin].hasBet) { btn.innerText = 'CASH OUT POSITION'; btn.style.background = 'linear-gradient(180deg, #3b82f6, #1d4ed8)'; btn.disabled = false; }
+                else { btn.innerText = 'SPECTATING'; btn.style.background = '#0d1527'; btn.disabled = true; }
+                break;
+            case 'TICK':
+                valText.innerText = data.multiplier.toFixed(2) + 'x'; valText.style.color = '#10b981'; drawCurve(coin, data.multiplier);
+                break;
+            case 'GAME_LIQUIDATED':
+                playCrashSound(); valText.innerText = data.finalMultiplier.toFixed(2) + 'x'; valText.style.color = '#ef4444';
+                btn.innerText = 'LIQUIDATED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
+                roomStates[coin].hasBet = false; roomStates[coin].isCashedOut = false; drawCurve(coin, 1.00); if(data.history) renderHistory(coin, data.history);
+                break;
+        }
+    };
+
+    ['TON', 'NOT', 'DOGS'].forEach(coin => {
+        const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
+        btn.onclick = function() {
+            if(btn.innerText.includes('OPEN')) {
+                let amt = parseFloat(input.value); if(amt > bonusWalletBal || amt <= 0) return;
+                bonusWalletBal = (bonusWalletBal - amt).toFixed(2); document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
+                roomStates[coin].hasBet = true; roomStates[coin].amt = amt; roomStates[coin].isCashedOut = false;
+                fetch('/place-bet?asset=' + coin + '&amount=' + amt); btn.innerText = 'POSITION SECURED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
+            } else if(btn.innerText.includes('CASH')) {
+                playCashoutSound();
+                fetch('/cashout?asset=' + coin).then(r => r.json()).then(res => {
+                    if(res.status === 'SUCCESS') {
+                        trueWalletBal = (parseFloat(trueWalletBal) + res.winAmount).toFixed(2);
+                        document.getElementById('true-wallet-display').innerText = trueWalletBal;
+                        btn.innerText = 'FILLED +' + res.winAmount; btn.style.background = '#0a0f1d'; btn.disabled = true;
+                        let state = roomStates[coin]; state.isCashedOut = true;
+                        if(state.pts.length > 0) { state.cashedOutY = state.pts[state.pts.length - 1].y; }
+                    }
+                });
+            }
+        };
+    });
