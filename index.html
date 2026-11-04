@@ -5,72 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Crypto X Premium Terminal</title>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; touch-action: manipulation; }
-        body { background-color: #02040a; color: #ffffff; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at top right, #091124, #02040a); }
-        .phone-frame { width: 100%; height: 100%; max-width: 412px; max-height: 892px; background: #040712; display: flex; flex-direction: column; position: relative; overflow: hidden; border: 2px solid #142247; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
-        .phone-header { background: #080f1f; padding: 14px 20px; border-bottom: 1px solid #14254d; display: flex; justify-content: space-between; align-items: center; height: 52px; z-index: 10; }
-        .logo-box { font-weight: 900; font-size: 16px; color: #ffb61a; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 12px rgba(255,182,26,0.4); }
-        .nav-actions { display: flex; justify-content: space-between; gap: 6px; padding: 10px 14px; background: #050a17; min-height: 44px; align-items: center; border-bottom: 1px solid #0f1c3a; z-index: 10; }
-        .nav-act-btn { background: linear-gradient(180deg, #1a2e5c, #0e1c3a); border: 1px solid #29468a; color: #b0c7ff; font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.15s ease; }
-        .nav-act-btn:active { background: #29468a; color: #ffffff; transform: scale(0.96); }
-        .hud-row { display: flex; justify-content: space-between; padding: 10px 14px; background: #060c1c; gap: 10px; min-height: 56px; z-index: 10; }
-        .hud-card { flex: 1; background: rgba(10, 20, 42, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 8px 12px; border-radius: 12px; border: 1px solid #1a3266; display: flex; flex-direction: column; justify-content: center; }
-        .hud-label { font-size: 8px; color: #7892cc; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; }
-        .hud-val { font-size: 15px; font-weight: 900; font-family: monospace; margin-top: 2px; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        
+        body { background-color: #ffffff; color: #1e293b; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; -webkit-text-size-adjust: 100%; }
+        .phone-frame { width: 100%; height: 100%; max-width: 412px; max-height: 892px; background: #fafafa; display: flex; flex-direction: column; position: relative; overflow: hidden; border: 2px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+        
+        .phone-header { background: #ffffff; padding: 10px 20px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: center; align-items: center; height: 64px; z-index: 10; }
+        .logo-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .hud-top-dashboard { display: flex; justify-content: space-between; padding: 12px; background: #ffffff; border-bottom: 1px solid #f1f5f9; gap: 12px; min-height: 100px; z-index: 10; }
+        
+        .action-link-cluster { display: flex; flex-direction: column; gap: 6px; justify-content: center; width: 45%; }
+        .nav-act-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s ease; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-act-btn:active { background: #cbd5e1; color: #1e293b; transform: scale(0.96); }
+        
+        .wallet-display-cluster { display: flex; flex-direction: column; gap: 6px; width: 50%; justify-content: center; position: relative; }
+        .hud-card { padding: 6px 10px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .hud-label { font-size: 8px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hud-val { font-size: 13px; font-weight: 900; font-family: monospace; margin-top: 1px; }
+        
+        .card-true { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: 1px solid #047857; }
+        .card-bonus { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border: 1px solid #b91c1c; }
+        
         .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 5; }
         .page { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .active-page { display: flex; }
-        /* PREMIUM MINING MATRIX PANEL */
+        /* PAGE 1 PLATFORM CONFIGURATIONS */
         #page-1 { justify-content: space-between; padding: 6px 0; }
-        .progress-container { background: rgba(10, 22, 46, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #1a356b; padding: 14px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .progress-container { background: #ffffff; border: 1px solid #e2e8f0; padding: 14px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
         .bar-wrapper { margin-bottom: 10px; }
         .bar-wrapper:last-child { margin-bottom: 0; }
-        .bar-label { font-size: 10px; color: #a3beff; font-weight: 800; margin-bottom: 5px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
-        .outer-bar { width: 100%; height: 9px; background: #02040a; border-radius: 5px; overflow: hidden; border: 1px solid #162a54; }
+        .bar-label { font-size: 10px; color: #64748b; font-weight: 800; margin-bottom: 5px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
+        .outer-bar { width: 100%; height: 10px; background: #e2e8f0; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
         .inner-bar { height: 100%; width: 0%; transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .tap-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-        .tap-zone { width: 160px; height: 160px; border-radius: 80px; background: radial-gradient(circle at 30% 30%, #ffc44d, #ea8c00); display: flex; align-items: center; justify-content: center; font-size: 76px; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 0 40px rgba(234,140,0,0.5), inset 0 4px 10px rgba(255,255,255,0.4), inset 0 -4px 10px rgba(0,0,0,0.4); position: relative; user-select: none; transition: transform 0.05s ease; border: 3px solid rgba(255,255,255,0.2); z-index: 6; }
-        .tap-zone:active { transform: scale(0.92); }
-        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s ease-out forwards; pointer-events: none; text-shadow: 0 0 10px rgba(16,185,129,0.7); z-index: 10; }
-        @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.8); } 100% { opacity: 0; transform: translateY(-90px) scale(1.4); } }
-        .msg-desc { font-size: 11px; color: #6277a1; text-align: center; margin: 0 12px; line-height: 1.6; font-weight: 600; }
-        .launch-btn { width: 100%; background: linear-gradient(90deg, #10b981, #008be3); border: none; padding: 16px; border-radius: 14px; color: white; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 20px rgba(0,140,227,0.4); letter-spacing: 0.7px; transition: all 0.15s ease; border: 1px solid rgba(255,255,255,0.1); z-index: 6; }
-        .launch-btn:active { transform: scale(0.98); opacity: 0.9; }
-        .footer-row { display: flex; justify-content: space-between; padding: 6px 6px 0 6px; }
-        .foot-link { color: #475a8a; font-size: 11px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-        /* SPACED-OUT GAME ARENA LAYOUT */
-        #page-2 { gap: 10px; }
-        .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 1px solid #0f1e3d; margin-bottom: 2px; }
-        .chart-card { flex: 1; background: rgba(8, 14, 31, 0.85); border: 1px solid #1b3266; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.03); }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .coin-badge { font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: 0.7px; display: flex; align-items: center; gap: 4px; }
-        .mult-val { font-family: monospace; font-size: 21px; font-weight: 900; letter-spacing: -0.5px; }
-        .canvas-box { width: 100%; flex: 1; background: #010308; border-radius: 12px; border: 1px solid #101f42; margin: 6px 0; box-shadow: inset 0 2px 8px rgba(0,0,0,0.8); }
-        .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
-        .history-strip::-webkit-scrollbar { height: 3px; }
-        .history-strip::-webkit-scrollbar-thumb { background: #1b3266; border-radius: 2px; }
-        .hist-pill { display: inline-block; background: #080f21; border: 1px solid #1b3266; color: #10b981; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         
-        /* STACKED STAKE DESK WIDE-BUTTON INFRASTRUCTURE */
+        /* 3D GOLDEN CLICK ENGINE TACTILITY */
+        .tap-zone { width: 160px; height: 160px; border-radius: 80px; background: linear-gradient(135deg, #ffe066 0%, #f5a623 50%, #d97706 100%); display: flex; align-items: center; justify-content: center; font-size: 82px; font-weight: 900; color: #ffffff; cursor: pointer; position: relative; border: 4px solid #fff59d; box-shadow: 0 10px 0px #b45309, 0 15px 25px rgba(180,83,9,0.4), inset 0 4px 8px rgba(255,255,255,0.6); transition: transform 0.05s ease, box-shadow 0.05s ease; text-shadow: 3px 3px 0px #92400e; z-index: 6; }
+        .tap-zone:active { transform: translateY(8px); box-shadow: 0 2px 0px #b45309, 0 4px 10px rgba(180,83,9,0.3), inset 0 2px 4px rgba(255,255,255,0.4); }
+        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 32px; animation: popUp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; pointer-events: none; text-shadow: 0 0 12px rgba(16,185,129,0.6); z-index: 10; }
+        @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-110px) scale(1.4); } }
+        .msg-desc { font-size: 11px; color: #64748b; text-align: center; margin: 0 16px; line-height: 1.6; font-weight: 600; }
+        
+        /* 3D TRI-TONE ARCADE LAUNCH KEY */
+        .launch-btn { width: 100%; background: linear-gradient(90deg, #ffb61a 0%, #008be3 50%, #f6465d 100%); border: none; padding: 18px; border-radius: 16px; color: white; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.05s ease; z-index: 6; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 0px #0b1a3a, 0 12px 20px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.3); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .launch-btn:active { transform: translateY(6px); box-shadow: 0 2px 0px #0b1a3a, 0 4px 8px rgba(0,0,0,0.2); }
+        .footer-row { display: flex; justify-content: space-between; padding: 6px 6px 0 6px; align-items: center; }
+        .foot-link { color: #000000; font-size: 11px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
+        
+        /* 🕹️ PAGE 2 LUXURY GREY FLOOR MATRIX */
+        #page-2 { gap: 10px; background: #e2e8f0; margin: -12px; padding: 12px; height: calc(100% + 24px); }
+        .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 2px solid #cbd5e1; margin-bottom: 2px; }
+        
+        /* DYNAMIC ROUNDED PURE WHITE TERMINAL CARDS */
+        .chart-card { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; position: relative; box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .coin-badge { font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 0.7px; display: flex; align-items: center; gap: 6px; }
+        .mult-val { font-family: monospace; font-size: 23px; font-weight: 900; letter-spacing: -0.5px; }
+        .canvas-box { width: 100%; flex: 1; background: #fafafa; border-radius: 14px; border: 1px solid #e2e8f0; margin: 4px 0; box-shadow: inset 0 2px 6px rgba(0,0,0,0.04); }
+        /* SWIPABLE HISTORY ELEMENT STRIPS & RISK COLOR BRACKETS */
+        .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
+        .history-strip::-webkit-scrollbar { height: 4px; }
+        .history-strip::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        .hist-pill { display: inline-block; border: 1px solid rgba(0,0,0,0.08); font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.1s ease; }
+        .hist-pill:active { transform: scale(0.93); }
+        
+        /* SHARP RISK CRASH BRACKETS INDEX COLORING RULES */
+        .pill-red { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+        .pill-green { background: #dcfce7; color: #10b981; border-color: #86efac; }
+        .pill-pink { background: #fce7f3; color: #ec4899; border-color: #fbcfe8; }
+        .pill-yellow { background: #fef9c3; color: #eab308; border-color: #fde047; }
+        .pill-orange { background: #ffedd5; color: #f97316; border-color: #fdba74; }
+
+        /* DE-CONGESTED STACKED SLOTS DESK SYSTEM */
         .bet-desk-grid { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
         .input-row-wrap { display: flex; gap: 8px; width: 100%; height: 36px; }
-        .stake-inp { width: 100%; height: 100%; background: #020409; color: #ffb61a; border: 1px solid #1b3266; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 4px rgba(0,0,0,0.6); }
-        .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #1d2d54, #111a36); border: 1px solid #2e437c; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); transition: all 0.1s ease; }
-        .wide-action-btn:active { transform: scale(0.97); }
-        /* INTERACTIVE MODALS & FIXED VISIBILITY CHAT DRAWER OVERRIDES */
-        .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2,3,7,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-frame { width: 100%; background: #070c19; border: 1px solid #1f3970; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-        .modal-title { font-size: 14px; font-weight: 900; color: #ffb61a; text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-body-text { font-size: 12px; color: #768ab3; line-height: 1.5; font-weight: 500; }
+        .stake-inp { width: 100%; height: 100%; background: #f8fafc; color: #d97706; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #334155, #1e293b); border: 1px solid #475569; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 4px 0px #0f172a; transition: all 0.05s ease; }
+        .wide-action-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #0f172a; }
+
+        /* INTERACTIVE NEUMORPHIC MODALS & FIXED DRAWER PANELS */
+        .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-frame { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .modal-title { font-size: 14px; font-weight: 900; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px; }
+        .modal-body-text { font-size: 12px; color: #64748b; line-height: 1.5; font-weight: 500; white-space: pre-line; }
         
-        /* OVERRIDE SYSTEM: REMOVED NEGATIVE POSITION TO PREVENT SCREEN FREEZES ON IPHONE VIEWPORTS */
-        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: rgba(3,6,15,0.99); border-left: 2px solid #1b3266; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.6); pointer-events: auto; }
+        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: #ffffff; border-left: 2px solid #e2e8f0; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.05); pointer-events: auto; }
         .chat-drawer-open { display: flex !important; }
-        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #13244d; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #a3beff; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #233e7d; border-right: none; pointer-events: auto; }
+        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #cbd5e1; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #475569; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #cbd5e1; border-right: none; pointer-events: auto; }
         .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-        .chat-msg { background: #050a14; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #112042; font-size: 11px; }
+        .chat-msg { background: #f8fafc; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #e2e8f0; font-size: 11px; }
         .chat-input-row { display: flex; gap: 4px; height: 36px; }
-        .chat-inp { flex: 1; background: #010307; border: 1px solid #162a54; color: white; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
+        .chat-inp { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
+        
+        /* LIVE HIGH-ALERT PRIZE WIN TEXT FLOATER ANCHOR */
+        .prize-floater-alert { position: absolute; color: #10b981; font-weight: 900; font-size: 24px; animation: flyUpHUD 0.8s ease-out forwards; pointer-events: none; z-index: 100; text-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+        @keyframes flyUpHUD { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
     </style>
 </head>
 <body>
@@ -79,18 +109,17 @@
         <div class="modal-frame" onclick="event.stopPropagation()">
             <div class="modal-title" id="modal-header-text">System Action</div>
             <div class="modal-body-text" id="modal-body-content">Connecting...</div>
-            <button class="launch-btn" style="padding:10px; font-size:11px;" onclick="closeModal()">Close Console Panel</button>
+            <button class="launch-btn" style="padding:10px; font-size:11px; box-shadow:none; transform:none;" onclick="closeModal()">Close Console Panel</button>
         </div>
     </div>
     
-    <!-- WRAPPED CHAT DRAWER INSIDE INDEPENDENT VISIBILITY LAYER TO UNBLOCK PHONE TOUCH ENGINES -->
     <div style="position: absolute; top:0; right:0; height:100%; z-index:150; pointer-events:none;">
         <div id="chat-panel" class="chat-drawer" style="pointer-events: auto;">
             <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
-            <div style="font-size:12px; font-weight:800; color:#ffb61a; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
+            <div style="font-size:12px; font-weight:800; color:#d97706; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
             <div class="chat-messages" id="chat-box-stream">
                 <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
-                <div class="chat-msg"><b style="color:#ffb61a;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
+                <div class="chat-msg"><b style="color:#eab308;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
                 <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
             </div>
             <div class="chat-input-row">
@@ -101,25 +130,42 @@
     </div>
 
     <div class="phone-header">
-        <span class="logo-box" id="app-logo">Crypto X Terminal</span>
-        <div style="width: 8px; height: 8px; background: #10b981; border-radius: 4px; box-shadow: 0 0 8px #10b981;"></div>
+        <div class="logo-container">
+            <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://w3.org">
+                <circle cx="20" cy="20" r="16" fill="url(#chromeGradient)" stroke="#cbd5e1" stroke-width="2"/>
+                <path d="M14 13.5L26 26.5M26 13.5L14 26.5" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round"/>
+                <text x="44" y="26" fill="#1e293b" font-family="-apple-system" font-weight="900" font-size="16" letter-spacing="1">CRYPTO X</text>
+                <defs>
+                    <linearGradient id="chromeGradient" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="50%" stop-color="#e2e8f0"/>
+                        <stop offset="100%" stop-color="#94a3b8"/>
+                    </linearGradient>
+                    <linearGradient id="goldGradient" x1="14" y1="13.5" x2="26" y2="26.5" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffe066"/>
+                        <stop offset="50%" stop-color="#f5a623"/>
+                        <stop offset="100%" stop-color="#d97706"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
     </div>
-    <div class="nav-actions" id="macro-bar-row">
-        <span class="foot-link" style="color: #ffb61a; font-weight:800;" id="page-indicator">PAGE 1</span>
-        <div id="header-btn-cluster" style="display:flex; gap:4px;">
+
+    <div class="hud-top-dashboard" id="hud-master-desk">
+        <div class="action-link-cluster">
             <button class="nav-act-btn" onclick="triggerModal('Deposit')">Deposit</button>
             <button class="nav-act-btn" onclick="triggerModal('Withdraw')">Withdraw</button>
-            <button class="nav-act-btn" onclick="triggerModal('History')">History</button>
+            <button class="nav-act-btn" onclick="triggerModal('Transactions')">Transactions</button>
         </div>
-    </div>
-    <div class="hud-row">
-        <div class="hud-card">
-            <div class="hud-label">💵 TRUE WALLET</div>
-            <div class="hud-val" style="color: #10b981;">$<span id="true-wallet-display">0.00</span></div>
-        </div>
-        <div class="hud-card">
-            <div class="hud-label">🎁 BONUS WALLET</div>
-            <div class="hud-val" style="color: #ffb61a;">$<span id="bonus-wallet-display">0.00</span></div>
+        <div class="wallet-display-cluster" id="wallet-anchor-zone">
+            <div class="hud-card card-true">
+                <span class="hud-label">💵 TRUE WALLET</span>
+                <div class="hud-val">$<span id="true-wallet-display">0.00</span></div>
+            </div>
+            <div class="hud-card card-bonus">
+                <span class="hud-label">🎁 BONUS WALLET</span>
+                <div class="hud-val">$<span id="bonus-wallet-display">0.00</span></div>
+            </div>
         </div>
     </div>
 
@@ -128,30 +174,30 @@
             <div class="progress-container">
                 <div class="bar-wrapper">
                     <div class="bar-label"><span>Daily Mining limit</span><span id="daily-text-val">0 / 300</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="daily-progress-bar" style="background:#10b981; width:0%;"></div></div>
+                    <div class="outer-bar"><div class="inner-bar" id="daily-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
                 </div>
                 <div class="bar-wrapper">
                     <div class="bar-label"><span>Task Progress bundle</span><span id="task-text-val">0 / 10</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="task-progress-bar" style="background:#ffb61a; width:0%;"></div></div>
+                    <div class="outer-bar"><div class="inner-bar" id="task-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
                 </div>
             </div>
             <div class="tap-container">
                 <div class="tap-zone" id="x-node-core">X</div>
             </div>
-            <p class="msg-desc">Tap 10 times & watch videos to earn your first wager package instantly!</p>
-            <button class="launch-btn" onclick="switchPage(2)">Launch Game Arena 🚀</button>
+            <p class="msg-desc">Earn first wager package within 1 minute & ready to place bet.</p>
+            <button class="launch-btn" onclick="switchPage(2)">Launch Terminal 🚀</button>
             <div class="footer-row">
-                <span class="foot-link" onclick="triggerModal('Referrals')">Refer & Earn</span>
-                <span class="foot-link" onclick="triggerModal('Support')">Help & Support</span>
+                <span class="foot-link" onclick="triggerModal('Referrals')">👥 Refer & Earn</span>
+                <span class="foot-link" onclick="triggerModal('Support')">❓ Help & Support</span>
             </div>
         </div>
+        
         <div id="page-2" class="page">
             <div class="arena-subheader">
                 <button class="nav-act-btn" style="background:#e63946; color:white; border:none; padding:3px 10px; height:24px; font-size:10px; display:flex; align-items:center;" onclick="switchPage(1)">◀ Back</button>
-                <span style="font-size:10px; font-weight:900; color:#ffb61a; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
+                <span style="font-size:10px; font-weight:900; color:#475569; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
             </div>
-
-            <!-- TONCOIN DE-CONGESTED STAND CARD -->
+            
             <div class="chart-card" id="card-TON">
                 <div class="chart-header">
                     <span class="coin-badge" style="color: #00a6ff;">💎 TON Engine</span>
@@ -166,11 +212,10 @@
                     <button class="wide-action-btn" id="btn-TON">OPEN MARGIN</button>
                 </div>
             </div>
-
-            <!-- NOTCOIN DE-CONGESTED STAND CARD -->
+            
             <div class="chart-card" id="card-NOT">
                 <div class="chart-header">
-                    <span class="coin-badge" style="color: #ffb61a;">🚀 NOT Canvas</span>
+                    <span class="coin-badge" style="color: #eab308;">🚀 NOT Canvas</span>
                     <span class="mult-val" id="val-NOT" style="color:#10b981;">1.00x</span>
                 </div>
                 <div class="history-strip" id="hist-NOT"></div>
@@ -182,8 +227,7 @@
                     <button class="wide-action-btn" id="btn-NOT">OPEN MARGIN</button>
                 </div>
             </div>
-
-            <!-- DOGS DE-CONGESTED STAND CARD -->
+            
             <div class="chart-card" id="card-DOGS">
                 <div class="chart-header">
                     <span class="coin-badge" style="color: #f6465d;">🐶 DOGS Arena</span>
@@ -207,15 +251,16 @@
     let trueWalletBal = 0.00; let bonusWalletBal = 0.00;
     let dailyTaps = 0; let taskTaps = 0;
     let roomStates = {
-        TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0 },
-        NOT: { hasBet: false, amt: 0, pts: [], color: '#ffb61a', isCashedOut: false, cashedOutY: 0 },
-        DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0 }
+        TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+        NOT: { hasBet: false, amt: 0, pts: [], color: '#eab308', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+        DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0, offsetX: 0 }
     };
 
-    // AUDIO CHIP SYNTHESIS ARRAYS
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let audioCtx = null;
+    function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
+    
     function playSynthSound(freq, type, duration, vol) {
-        try {
+        initAudio(); try {
             const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             gain.gain.setValueAtTime(vol, audioCtx.currentTime);
@@ -226,126 +271,153 @@
     function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
     function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
     function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
-
-    function toggleChat() { document.getElementById('chat-panel').classList.toggle('chat-drawer-open'); }
-    function sendChatMessage() {
-        const input = document.getElementById('chat-message-input'); if(!input.value.trim()) return;
-        const msgBox = document.getElementById('chat-box-stream'); const newMsg = document.createElement('div');
-        newMsg.className = 'chat-msg'; newMsg.innerHTML = "<b>You:</b> " + input.value;
-        msgBox.appendChild(newMsg); msgBox.scrollTop = msgBox.scrollHeight; input.value = '';
-    }
-
-    function triggerModal(type) {
-        document.getElementById('modal-header-text').innerText = type + " Dashboard Terminal";
-        if (type === 'Deposit') {
-            document.getElementById('modal-body-content').innerText = "⚠️ SYSTEM ERROR: Payout lane parameters un-initialized.\n\nTo wire real deposit addresses natively to your live Supabase wallets, we must link your official Tonkeeper public address key string next.";
-        } else if (type === 'Withdraw') {
-            document.getElementById('modal-body-content').innerText = "⚠️ Payout barrier gate locked.\n\nMinimum manual withdrawal amount threshold is configured to $5.00 worth of TON network liquidity assets.";
-        } else {
-            document.getElementById('modal-body-content').innerText = "Connecting secure data tracks to your live ledger. Current logs: 0 transaction rows recorded.";
-        }
-        document.getElementById('system-modal').style.display = 'flex';
-    }
-    function closeModal() { document.getElementById('system-modal').style.display = 'none'; }
-
-    function switchPage(num) {
-        document.getElementById('page-1').classList.toggle('active-page', num === 1);
-        document.getElementById('page-2').classList.toggle('active-page', num === 2);
-        document.getElementById('page-indicator').innerText = 'PAGE ' + num;
-        const btnCluster = document.getElementById('header-btn-cluster');
-        if(num === 2) { btnCluster.style.visibility = 'hidden'; } else { btnCluster.style.visibility = 'visible'; }
-    }
-
-    document.getElementById('x-node-core').onclick = (e) => {
-        if(dailyTaps >= 300) return; dailyTaps++; taskTaps++; playTapSound();
-        document.getElementById('daily-text-val').innerText = dailyTaps + ' / 300';
-        document.getElementById('daily-progress-bar').style.width = (dailyTaps / 300 * 100) + '%';
-        document.getElementById('task-text-val').innerText = taskTaps + ' / 10';
-        document.getElementById('task-progress-bar').style.width = (taskTaps / 10 * 100) + '%';
-        
-        const floatItem = document.createElement('div'); floatItem.className = 'float-part'; floatItem.innerText = '+$';
-        floatItem.style.left = (e.offsetX + 40) + 'px'; floatItem.style.top = (e.offsetY + 35) + 'px';
-        document.getElementById('x-node-core').appendChild(floatItem); setTimeout(() => floatItem.remove(), 500);
-        
-        if(taskTaps >= 10) {
-            taskTaps = 0; document.getElementById('task-text-val').innerText = '0 / 10'; document.getElementById('task-progress-bar').style.width = '0%';
-            fetch('/credit-tap').then(r => r.json()).then(data => {
-                bonusWalletBal = (parseFloat(bonusWalletBal) + data.credit).toFixed(2);
-                document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
-            });
-        }
-    };
-
-    function drawCurve(coin, multiplier) {
-        const canvas = document.getElementById('canvas-' + coin); if(!canvas) return;
-        const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = '#101e40'; ctx.lineWidth = 1;
-        for(let i=30; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-        
-        let state = roomStates[coin]; if(multiplier <= 1.00) { state.pts = []; return; }
-        let x = Math.min((multiplier - 1.00) * 55 + 20, canvas.width - 20);
-        let y = canvas.height - Math.min((multiplier - 1.00) * 14 + 12, canvas.height - 12);
-        
-        if (state.hasBet && state.isCashedOut) { y = state.cashedOutY; }
-        
-        state.pts.push({x: x, y: y}); ctx.beginPath(); ctx.strokeStyle = state.color; ctx.lineWidth = 3;
-        for(let i=0; i<state.pts.length; i++) { if(i===0) ctx.moveTo(state.pts[i].x, state.pts[i].y); else ctx.lineTo(state.pts[i].x, state.pts[i].y); }
-        ctx.stroke();
-    }
-
-    function renderHistory(coin, historyArr) {
-        const strip = document.getElementById('hist-' + coin); if(!strip) return; strip.innerHTML = '';
-        historyArr.slice(0, 15).forEach(item => {
-            const pill = document.createElement('span'); pill.className = 'hist-pill'; pill.innerText = parseFloat(item.mult).toFixed(2) + 'x';
-            pill.onclick = () => alert("🛡️ PROVABLY FAIR VERIFICATION\n\nAsset: " + coin + "\nEnding Multiplier: " + item.mult + "x\nHMAC SHA-256 Seed Token: " + item.hash);
-            strip.appendChild(pill);
-        });
-    }
-
-    eventSource.onmessage = function(event) {
-        const data = JSON.parse(event.data); let coin = data.asset; if(!roomStates[coin]) return;
-        const valText = document.getElementById('val-' + coin); const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
-        switch(data.type) {
-            case 'COUNTDOWN':
-            case 'COUNTDOWN':
-                valText.innerText = data.seconds + 's'; valText.style.color = '#ffb61a';
-                if(!roomStates[coin].hasBet) { btn.innerText = 'OPEN MARGIN'; btn.style.background = 'linear-gradient(180deg, #10b981, #059669)'; btn.disabled = false; input.disabled = false; }
-                break;
-            case 'TAKEOFF':
-                input.disabled = true;
-                if(roomStates[coin].hasBet) { btn.innerText = 'CASH OUT POSITION'; btn.style.background = 'linear-gradient(180deg, #3b82f6, #1d4ed8)'; btn.disabled = false; }
-                else { btn.innerText = 'SPECTATING'; btn.style.background = '#0d1527'; btn.disabled = true; }
-                break;
-            case 'TICK':
-                valText.innerText = data.multiplier.toFixed(2) + 'x'; valText.style.color = '#10b981'; drawCurve(coin, data.multiplier);
-                break;
-            case 'GAME_LIQUIDATED':
-                playCrashSound(); valText.innerText = data.finalMultiplier.toFixed(2) + 'x'; valText.style.color = '#ef4444';
-                btn.innerText = 'LIQUIDATED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
-                roomStates[coin].hasBet = false; roomStates[coin].isCashedOut = false; drawCurve(coin, 1.00); if(data.history) renderHistory(coin, data.history);
-                break;
-        }
-    };
-
-    ['TON', 'NOT', 'DOGS'].forEach(coin => {
-        const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
-        btn.onclick = function() {
-            if(btn.innerText.includes('OPEN')) {
-                let amt = parseFloat(input.value); if(amt > bonusWalletBal || amt <= 0) return;
-                bonusWalletBal = (bonusWalletBal - amt).toFixed(2); document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
-                roomStates[coin].hasBet = true; roomStates[coin].amt = amt; roomStates[coin].isCashedOut = false;
-                fetch('/place-bet?asset=' + coin + '&amount=' + amt); btn.innerText = 'POSITION SECURED'; btn.style.background = '#0a0f1d'; btn.disabled = true;
-            } else if(btn.innerText.includes('CASH')) {
-                playCashoutSound();
-                fetch('/cashout?asset=' + coin).then(r => r.json()).then(res => {
-                    if(res.status === 'SUCCESS') {
-                        trueWalletBal = (parseFloat(trueWalletBal) + res.winAmount).toFixed(2);
-                        document.getElementById('true-wallet-display').innerText = trueWalletBal;
-                        btn.innerText = 'FILLED +' + res.winAmount; btn.style.background = '#0a0f1d'; btn.disabled = true;
-                        let state = roomStates[coin]; state.isCashedOut = true;
-                        if(state.pts.length > 0) { state.cashedOutY = state.pts[state.pts.length - 1].y; }
-                    }
-                });
-            }
-        };
-    });
+function triggerCashoutHUDAlert(amount) {
+const anchor = document.getElementById('wallet-anchor-zone');
+const alertBox = document.createElement('div');
+alertBox.className = 'prize-floater-alert';
+alertBox.innerHTML = 💰 +$${amount};
+alertBox.style.right = '20px';
+alertBox.style.top = '10px';
+anchor.appendChild(alertBox);
+setTimeout(() => alertBox.remove(), 800);
+}
+function toggleChat() { document.getElementById('chat-panel').classList.toggle('chat-drawer-open'); }
+function sendChatMessage() {
+const input = document.getElementById('chat-message-input'); if(!input.value.trim()) return;
+const msgBox = document.getElementById('chat-box-stream'); const newMsg = document.createElement('div');
+newMsg.className = 'chat-msg'; newMsg.innerHTML = "You: " + input.value;
+msgBox.appendChild(newMsg); msgBox.scrollTop = msgBox.scrollHeight; input.value = '';
+}
+function triggerModal(type) {
+document.getElementById('modal-header-text').innerText = type + " Dashboard Terminal";
+if (type === 'Deposit') {
+document.getElementById('modal-body-content').innerText = "⚠️ SYSTEM ERROR: Payout lane parameters un-initialized.\n\nTo wire real deposit addresses natively to your live Supabase wallets, we must link your official Tonkeeper public address key string next.";
+} else if (type === 'Withdraw') {
+document.getElementById('modal-body-content').innerText = "⚠️ Payout barrier gate locked.\n\nMinimum manual withdrawal amount threshold is configured to $5.00 worth of TON network liquidity assets.";
+} else {
+document.getElementById('modal-body-content').innerText = "Connecting secure data tracks to your live ledger. Current logs: 0 transaction rows recorded.";
+}
+document.getElementById('system-modal').style.display = 'flex';
+}
+function closeModal() { document.getElementById('system-modal').style.display = 'none'; }
+function switchPage(num) {
+document.getElementById('page-1').classList.toggle('active-page', num === 1);
+document.getElementById('page-2').classList.toggle('active-page', num === 2);
+document.getElementById('page-indicator').innerText = 'PAGE ' + num;
+}
+document.getElementById('x-node-core').onclick = (e) => {
+if(dailyTaps >= 300) return; dailyTaps++; taskTaps++; playTapSound();
+document.getElementById('daily-text-val').innerText = dailyTaps + ' / 300';
+document.getElementById('daily-progress-bar').style.width = (dailyTaps / 300 * 100) + '%';
+document.getElementById('task-text-val').innerText = taskTaps + ' / 10';
+document.getElementById('task-progress-bar').style.width = (taskTaps / 10 * 100) + '%';
+const floatItem = document.createElement('div'); floatItem.className = 'float-part'; floatItem.innerText = '💰 +$';
+floatItem.style.left = (e.clientX - 20) + 'px'; floatItem.style.top = (e.clientY - 40) + 'px';
+floatItem.style.position = 'fixed'; document.body.appendChild(floatItem); setTimeout(() => floatItem.remove(), 500);
+if(taskTaps >= 10) {
+taskTaps = 0; document.getElementById('task-text-val').innerText = '0 / 10'; document.getElementById('task-progress-bar').style.width = '0%';
+fetch('/credit-tap').then(r => r.json()).then(data => {
+bonusWalletBal = (parseFloat(bonusWalletBal) + data.credit).toFixed(2);
+document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
+});
+}
+};
+function triggerCashoutHUDAlert(amount) {
+const anchor = document.getElementById('wallet-anchor-zone');
+const alertBox = document.createElement('div');
+alertBox.className = 'prize-floater-alert';
+alertBox.innerHTML = 💰 +$${amount};
+alertBox.style.right = '20px';
+alertBox.style.top = '10px';
+anchor.appendChild(alertBox);
+setTimeout(() => alertBox.remove(), 800);
+}
+function toggleChat() { document.getElementById('chat-panel').classList.toggle('chat-drawer-open'); }
+function sendChatMessage() {
+const input = document.getElementById('chat-message-input'); if(!input.value.trim()) return;
+const msgBox = document.getElementById('chat-box-stream'); const newMsg = document.createElement('div');
+newMsg.className = 'chat-msg'; newMsg.innerHTML = "You: " + input.value;
+msgBox.appendChild(newMsg); msgBox.scrollTop = msgBox.scrollHeight; input.value = '';
+}
+function triggerModal(type) {
+document.getElementById('modal-header-text').innerText = type + " Dashboard Terminal";
+if (type === 'Deposit') {
+document.getElementById('modal-body-content').innerText = "⚠️ SYSTEM ERROR: Payout lane parameters un-initialized.\n\nTo wire real deposit addresses natively to your live Supabase wallets, we must link your official Tonkeeper public address key string next.";
+} else if (type === 'Withdraw') {
+document.getElementById('modal-body-content').innerText = "⚠️ Payout barrier gate locked.\n\nMinimum manual withdrawal amount threshold is configured to $5.00 worth of TON network liquidity assets.";
+} else {
+document.getElementById('modal-body-content').innerText = "Connecting secure data tracks to your live ledger. Current logs: 0 transaction rows recorded.";
+}
+document.getElementById('system-modal').style.display = 'flex';
+}
+function closeModal() { document.getElementById('system-modal').style.display = 'none'; }
+function switchPage(num) {
+document.getElementById('page-1').classList.toggle('active-page', num === 1);
+document.getElementById('page-2').classList.toggle('active-page', num === 2);
+document.getElementById('page-indicator').innerText = 'PAGE ' + num;
+}
+document.getElementById('x-node-core').onclick = (e) => {
+if(dailyTaps >= 300) return; dailyTaps++; taskTaps++; playTapSound();
+document.getElementById('daily-text-val').innerText = dailyTaps + ' / 300';
+document.getElementById('daily-progress-bar').style.width = (dailyTaps / 300 * 100) + '%';
+document.getElementById('task-text-val').innerText = taskTaps + ' / 10';
+document.getElementById('task-progress-bar').style.width = (taskTaps / 10 * 100) + '%';
+const floatItem = document.createElement('div'); floatItem.className = 'float-part'; floatItem.innerText = '💰 +$';
+floatItem.style.left = (e.clientX - 20) + 'px'; floatItem.style.top = (e.clientY - 40) + 'px';
+floatItem.style.position = 'fixed'; document.body.appendChild(floatItem); setTimeout(() => floatItem.remove(), 500);
+if(taskTaps >= 10) {
+taskTaps = 0; document.getElementById('task-text-val').innerText = '0 / 10'; document.getElementById('task-progress-bar').style.width = '0%';
+fetch('/credit-tap').then(r => r.json()).then(data => {
+bonusWalletBal = (parseFloat(bonusWalletBal) + data.credit).toFixed(2);
+document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
+});
+}
+};
+eventSource.onmessage = function(event) {
+const data = JSON.parse(event.data); let coin = data.asset; if(!roomStates[coin]) return;
+const valText = document.getElementById('val-' + coin); const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
+switch(data.type) {
+case 'COUNTDOWN':
+valText.innerText = data.seconds + 's'; valText.style.color = '#d97706';
+if(!roomStates[coin].hasBet) { btn.innerText = 'OPEN MARGIN'; btn.style.background = 'linear-gradient(180deg, #334155, #1e293b)'; btn.disabled = false; input.disabled = false; }
+break;
+case 'TAKEOFF':
+input.disabled = true;
+if(roomStates[coin].hasBet) { btn.innerText = 'CASH OUT POSITION'; btn.style.background = 'linear-gradient(180deg, #3b82f6, #1d4ed8)'; btn.disabled = false; }
+else { btn.innerText = 'SPECTATING'; btn.style.background = '#e2e8f0'; btn.disabled = true; }
+break;
+case 'TICK':
+valText.innerText = data.multiplier.toFixed(2) + 'x'; valText.style.color = '#10b981'; drawCurve(coin, data.multiplier);
+break;
+case 'GAME_LIQUIDATED':
+playCrashSound(); valText.innerText = data.finalMultiplier.toFixed(2) + 'x'; valText.style.color = '#ef4444';
+btn.innerText = 'LIQUIDATED'; btn.style.background = '#cbd5e1'; btn.disabled = true;
+roomStates[coin].hasBet = false; roomStates[coin].isCashedOut = false; drawCurve(coin, 1.00); if(data.history) renderHistory(coin, data.history);
+break;
+}
+};
+['TON', 'NOT', 'DOGS'].forEach(coin => {
+const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
+btn.onclick = function() {
+initAudio();
+if(btn.innerText.includes('OPEN')) {
+let amt = parseFloat(input.value); if(amt > bonusWalletBal || amt <= 0) return;
+bonusWalletBal = (bonusWalletBal - amt).toFixed(2); document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
+roomStates[coin].hasBet = true; roomStates[coin].amt = amt; roomStates[coin].isCashedOut = false;
+fetch('/place-bet?asset=' + coin + '&amount=' + amt); btn.innerText = 'POSITION SECURED'; btn.style.background = '#cbd5e1'; btn.disabled = true;
+} else if(btn.innerText.includes('CASH')) {
+playCashoutSound();
+fetch('/cashout?asset=' + coin).then(r => r.json()).then(res => {
+if(res.status === 'SUCCESS') {
+trueWalletBal = (parseFloat(trueWalletBal) + res.winAmount).toFixed(2);
+document.getElementById('true-wallet-display').innerText = trueWalletBal;
+triggerCashoutHUDAlert(res.winAmount);
+btn.innerText = 'FILLED +' + res.winAmount; btn.style.background = '#cbd5e1'; btn.disabled = true;
+let state = roomStates[coin]; state.isCashedOut = true;
+const canvas = document.getElementById('canvas-' + coin);
+if(state.pts.length > 0 && canvas) { state.cashedOutY = state.pts[state.pts.length - 1].y; }
+}
+});
+}
+};
+});
