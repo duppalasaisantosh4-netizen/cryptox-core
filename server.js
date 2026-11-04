@@ -24,6 +24,7 @@ function startRoomLifecycle(coin) {
     let r = rooms[coin]; r.status = 'WAITING'; r.multiplier = 1.00; r.countdown = 5;
     let publicCommit = generateProvablyFairSeed(coin);
     
+    // IRONCLAD 35x MAXIMUM RISK ENGINE SHIELD
     let rawRandom = Math.random();
     let calculatedCrash = parseFloat((rawRandom * (35.00 - 1.05) + 1.10).toFixed(2));
     
@@ -77,6 +78,7 @@ const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
+    // EXPLICIT SYSTEM HEARTBEAT ROUTER - KEEPS CONTAINER LIVE 24/7/365
     if (req.url.startsWith('/keep-alive-ping')) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'AWAKE', timestamp: Date.now() }));
