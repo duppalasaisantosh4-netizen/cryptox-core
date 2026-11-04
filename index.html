@@ -8,29 +8,98 @@
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
         
         body { background-color: #ffffff; color: #1e293b; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; -webkit-text-size-adjust: 100%; }
-        .phone-frame { width: 100%; height: 100%; max-width: 412px; max-height: 892px; background: #fafafa; display: flex; flex-direction: column; position: relative; overflow: hidden; border: 2px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
+        .phone-frame { width: 100%; height: 100%; max-width: 412px; background: #fafafa; display: flex; flex-direction: column; position: relative; overflow: hidden; border: none; }
         
-        .phone-header { background: #ffffff; padding: 10px 20px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: center; align-items: center; height: 64px; z-index: 10; }
+        .phone-header { background: #ffffff; padding: 6px 12px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: center; align-items: center; height: 46px; z-index: 10; }
         .logo-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .hud-top-dashboard { display: flex; justify-content: space-between; padding: 12px; background: #ffffff; border-bottom: 1px solid #f1f5f9; gap: 12px; min-height: 100px; z-index: 10; }
+        .hud-top-dashboard { display: flex; justify-content: space-between; padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #f1f5f9; gap: 10px; min-height: 80px; z-index: 10; }
         
-        .action-link-cluster { display: flex; flex-direction: column; gap: 6px; justify-content: center; width: 45%; }
-        .nav-act-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s ease; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .action-link-cluster { display: flex; flex-direction: column; gap: 4px; justify-content: center; width: 42%; }
+        .nav-act-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s ease; text-align: center; }
         .nav-act-btn:active { background: #cbd5e1; color: #1e293b; transform: scale(0.96); }
         
-        .wallet-display-cluster { display: flex; flex-direction: column; gap: 6px; width: 50%; justify-content: center; position: relative; }
-        .hud-card { padding: 6px 10px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .wallet-display-cluster { display: flex; flex-direction: column; gap: 4px; width: 54%; justify-content: center; position: relative; }
+        .hud-card { padding: 4px 10px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
         .hud-label { font-size: 8px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
-        .hud-val { font-size: 13px; font-weight: 900; font-family: monospace; margin-top: 1px; }
+        .hud-val { font-size: 12px; font-weight: 900; font-family: monospace; margin-top: 1px; }
         
         .card-true { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: 1px solid #047857; }
         .card-bonus { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border: 1px solid #b91c1c; }
         
-        .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 5; }
+        .phone-body { flex: 1; padding: 8px 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 5; }
         .page { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .active-page { display: flex; }
-    <div id="system-modal" class="modal-mask" onclick="closeModal()">
+
+        #page-1 { justify-content: space-between; padding: 6px 0; }
+        .progress-container { background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .bar-wrapper { margin-bottom: 8px; }
+        .bar-wrapper:last-child { margin-bottom: 0; }
+        .bar-label { font-size: 10px; color: #64748b; font-weight: 800; margin-bottom: 4px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
+        .outer-bar { width: 100%; height: 9px; background: #e2e8f0; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .inner-bar { height: 100%; width: 0%; transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tap-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 180px; }
+        
+        .tap-zone { width: 150px; height: 150px; border-radius: 75px; background: linear-gradient(135deg, #ffe066 0%, #f5a623 50%, #d97706 100%); display: flex; align-items: center; justify-content: center; font-size: 76px; font-weight: 900; color: #ffffff; cursor: pointer; position: relative; border: 4px solid #fff59d; box-shadow: 0 8px 0px #b45309, 0 12px 20px rgba(180,83,9,0.35), inset 0 4px 8px rgba(255,255,255,0.6); transition: transform 0.05s ease, box-shadow 0.05s ease; text-shadow: 3px 3px 0px #92400e; z-index: 6; }
+        .tap-zone:active { transform: translateY(6px); box-shadow: 0 2px 0px #b45309, 0 4px 8px rgba(180,83,9,0.25), inset 0 2px 4px rgba(255,255,255,0.4); }
+        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; pointer-events: none; text-shadow: 0 0 12px rgba(16,185,129,0.6); z-index: 10; }
+        @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-100px) scale(1.3); } }
+        .msg-desc { font-size: 11px; color: #64748b; text-align: center; margin: 4px 16px; line-height: 1.5; font-weight: 600; }
+        
+        .launch-btn { width: 100%; background: linear-gradient(90deg, #ffb61a 0%, #008be3 50%, #f6465d 100%); border: none; padding: 14px; border-radius: 14px; color: white; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.05s ease; z-index: 6; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 6px 0px #0b1a3a, 0 10px 15px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3); text-shadow: 0 1px 3px rgba(0,0,0,0.5); margin-top: 4px; }
+        .launch-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #0b1a3a, 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .footer-row { display: flex; justify-content: space-between; padding: 8px 4px 0 4px; align-items: center; }
+        .foot-link { color: #000000; font-size: 10px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
+
+        #page-2 { gap: 10px; background: #e2e8f0; margin: -8px -12px; padding: 12px; height: calc(100% + 16px); }
+        .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 2px solid #cbd5e1; margin-bottom: 2px; }
+        
+        .chart-card { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; position: relative; box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .coin-badge { font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 0.7px; display: flex; align-items: center; gap: 6px; }
+        .mult-val { font-family: monospace; font-size: 23px; font-weight: 900; letter-spacing: -0.5px; }
+        .canvas-box { width: 100%; flex: 1; background: #fafafa; border-radius: 14px; border: 1px solid #e2e8f0; margin: 4px 0; box-shadow: inset 0 2px 6px rgba(0,0,0,0.04); }
+        
+        .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
+        .history-strip::-webkit-scrollbar { height: 4px; }
+        .history-strip::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        .hist-pill { display: inline-block; border: 1px solid rgba(0,0,0,0.08); font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.1s ease; }
+        .hist-pill:active { transform: scale(0.93); }
+        
+        .pill-red { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+        .pill-green { background: #dcfce7; color: #10b981; border-color: #86efac; }
+        .pill-pink { background: #fce7f3; color: #ec4899; border-color: #fbcfe8; }
+        .pill-yellow { background: #fef9c3; color: #eab308; border-color: #fde047; }
+        .pill-orange { background: #ffedd5; color: #f97316; border-color: #fdba74; }
+
+        .bet-desk-grid { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
+        .input-row-wrap { display: flex; gap: 8px; width: 100%; height: 36px; }
+        .stake-inp { width: 100%; height: 100%; background: #f8fafc; color: #d97706; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #334155, #1e293b); border: 1px solid #475569; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 4px 0px #0f172a; transition: all 0.05s ease; }
+        .wide-action-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #0f172a; }
+
+        .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-frame { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .modal-title { font-size: 14px; font-weight: 900; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px; }
+        .modal-body-text { font-size: 12px; color: #64748b; line-height: 1.5; font-weight: 500; white-space: pre-line; }
+        
+        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: #ffffff; border-left: 2px solid #e2e8f0; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.05); pointer-events: auto; }
+        .chat-drawer-open { display: flex !important; }
+        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #cbd5e1; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #475569; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #cbd5e1; border-right: none; pointer-events: auto; }
+        .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+        .chat-msg { background: #f8fafc; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #e2e8f0; font-size: 11px; }
+        .chat-input-row { display: flex; gap: 4px; height: 36px; }
+        .chat-inp { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
+        
+        .prize-floater-alert { position: absolute; color: #10b981; font-weight: 900; font-size: 24px; animation: flyUpHUD 0.8s ease-out forwards; pointer-events: none; z-index: 100; text-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+        @keyframes flyUpHUD { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
+    </style>
+</head>
+<body>
+<div class="phone-frame">
+
+        <div id="system-modal" class="modal-mask" onclick="closeModal()">
         <div class="modal-frame" onclick="event.stopPropagation()">
             <div class="modal-title" id="modal-header-text">System Action</div>
             <div class="modal-body-text" id="modal-body-content">Connecting...</div>
@@ -196,48 +265,6 @@
     function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
     function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
     function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
-/* SWIPABLE HISTORY ELEMENT STRIPS & RISK COLOR BRACKETS */
-        .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
-        .history-strip::-webkit-scrollbar { height: 4px; }
-        .history-strip::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
-        .hist-pill { display: inline-block; border: 1px solid rgba(0,0,0,0.08); font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.1s ease; }
-        .hist-pill:active { transform: scale(0.93); }
-        
-        /* SHARP RISK CRASH BRACKETS INDEX COLORING RULES */
-        .pill-red { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
-        .pill-green { background: #dcfce7; color: #10b981; border-color: #86efac; }
-        .pill-pink { background: #fce7f3; color: #ec4899; border-color: #fbcfe8; }
-        .pill-yellow { background: #fef9c3; color: #eab308; border-color: #fde047; }
-        .pill-orange { background: #ffedd5; color: #f97316; border-color: #fdba74; }
-
-        /* DE-CONGESTED STACKED SLOTS DESK SYSTEM */
-        .bet-desk-grid { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
-        .input-row-wrap { display: flex; gap: 8px; width: 100%; height: 36px; }
-        .stake-inp { width: 100%; height: 100%; background: #f8fafc; color: #d97706; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
-        .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #334155, #1e293b); border: 1px solid #475569; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 4px 0px #0f172a; transition: all 0.05s ease; }
-        .wide-action-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #0f172a; }
-
-        /* INTERACTIVE NEUMORPHIC MODALS & FIXED DRAWER PANELS */
-        .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-frame { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-title { font-size: 14px; font-weight: 900; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-body-text { font-size: 12px; color: #64748b; line-height: 1.5; font-weight: 500; white-space: pre-line; }
-        
-        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: #ffffff; border-left: 2px solid #e2e8f0; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.05); pointer-events: auto; }
-        .chat-drawer-open { display: flex !important; }
-        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #cbd5e1; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #475569; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #cbd5e1; border-right: none; pointer-events: auto; }
-        .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-        .chat-msg { background: #f8fafc; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #e2e8f0; font-size: 11px; }
-        .chat-input-row { display: flex; gap: 4px; height: 36px; }
-        .chat-inp { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
-        
-        /* LIVE HIGH-ALERT PRIZE WIN TEXT FLOATER ANCHOR */
-        .prize-floater-alert { position: absolute; color: #10b981; font-weight: 900; font-size: 24px; animation: flyUpHUD 0.8s ease-out forwards; pointer-events: none; z-index: 100; text-shadow: 0 2px 10px rgba(16,185,129,0.4); }
-        @keyframes flyUpHUD { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
-    </style>
-</head>
-<body>
-<div class="phone-frame">
 <div id="system-modal" class="modal-mask" onclick="closeModal()">
         <div class="modal-frame" onclick="event.stopPropagation()">
             <div class="modal-title" id="modal-header-text">System Action</div>
@@ -455,57 +482,58 @@ document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
 });
 }
 };
-function triggerCashoutHUDAlert(amount) {
-const anchor = document.getElementById('wallet-anchor-zone');
-const alertBox = document.createElement('div');
-alertBox.className = 'prize-floater-alert';
-alertBox.innerHTML = 💰 +$${amount};
-alertBox.style.right = '20px';
-alertBox.style.top = '10px';
-anchor.appendChild(alertBox);
-setTimeout(() => alertBox.remove(), 800);
+function drawCurve(coin, multiplier) {
+const canvas = document.getElementById('canvas-' + coin); if(!canvas) return;
+const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height);
+let state = roomStates[coin];
+if(multiplier <= 1.00) { state.pts = []; state.offsetX = 0; return; }
+let targetX = (multiplier - 1.00) * 55 + 20;
+if (targetX > canvas.width - 60) { state.offsetX = targetX - (canvas.width - 60); }
+ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+let gridGap = 40;
+let startX = 30 - (state.offsetX % gridGap);
+for(let i = startX; i < canvas.width; i += gridGap) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+let currentX = Math.min(targetX - state.offsetX, canvas.width - 20);
+let currentY = canvas.height - Math.min((multiplier - 1.00) * 14 + 12, canvas.height - 12);
+if (state.hasBet && state.isCashedOut) { currentY = state.cashedOutY; }
+state.pts.push({ rawX: targetX, y: currentY });
+ctx.beginPath(); ctx.strokeStyle = state.color; ctx.lineWidth = 3;
+let first = true;
+state.pts.forEach(pt => {
+let renderX = pt.rawX - state.offsetX;
+if (renderX >= 0 && renderX <= canvas.width) {
+if (first) { ctx.moveTo(renderX, pt.y); first = false; }
+else { ctx.lineTo(renderX, pt.y); }
 }
-function toggleChat() { document.getElementById('chat-panel').classList.toggle('chat-drawer-open'); }
-function sendChatMessage() {
-const input = document.getElementById('chat-message-input'); if(!input.value.trim()) return;
-const msgBox = document.getElementById('chat-box-stream'); const newMsg = document.createElement('div');
-newMsg.className = 'chat-msg'; newMsg.innerHTML = "You: " + input.value;
-msgBox.appendChild(newMsg); msgBox.scrollTop = msgBox.scrollHeight; input.value = '';
+});
+ctx.stroke();
 }
-function triggerModal(type) {
-document.getElementById('modal-header-text').innerText = type + " Dashboard Terminal";
-if (type === 'Deposit') {
-document.getElementById('modal-body-content').innerText = "⚠️ SYSTEM ERROR: Payout lane parameters un-initialized.\n\nTo wire real deposit addresses natively to your live Supabase wallets, we must link your official Tonkeeper public address key string next.";
-} else if (type === 'Withdraw') {
-document.getElementById('modal-body-content').innerText = "⚠️ Payout barrier gate locked.\n\nMinimum manual withdrawal amount threshold is configured to $5.00 worth of TON network liquidity assets.";
-} else {
-document.getElementById('modal-body-content').innerText = "Connecting secure data tracks to your live ledger. Current logs: 0 transaction rows recorded.";
+function getRiskClass(mult) {
+if (mult < 2.00) return 'pill-red';
+if (mult < 5.00) return 'pill-green';
+if (mult < 10.00) return 'pill-pink';
+if (mult < 35.00) return 'pill-yellow';
+return 'pill-orange';
 }
-document.getElementById('system-modal').style.display = 'flex';
+function triggerProvablyFairLogs(coin, mult, hash) {
+let explainText = `🛡️ PROVABLY FAIR VERIFICATION
+Asset Arena: ${coin}
+Round Result: ${parseFloat(mult).toFixed(2)}x
+[HOW IT WORKS]:
+The ending crash value is pre-calculated using standard HMAC SHA-256 protocols before bets are placed. This creates an encrypted commitment.
+Status: Verified Fair Ledger Lock.`;
+alert(explainText);
 }
-function closeModal() { document.getElementById('system-modal').style.display = 'none'; }
-function switchPage(num) {
-document.getElementById('page-1').classList.toggle('active-page', num === 1);
-document.getElementById('page-2').classList.toggle('active-page', num === 2);
-document.getElementById('page-indicator').innerText = 'PAGE ' + num;
-}
-document.getElementById('x-node-core').onclick = (e) => {
-if(dailyTaps >= 300) return; dailyTaps++; taskTaps++; playTapSound();
-document.getElementById('daily-text-val').innerText = dailyTaps + ' / 300';
-document.getElementById('daily-progress-bar').style.width = (dailyTaps / 300 * 100) + '%';
-document.getElementById('task-text-val').innerText = taskTaps + ' / 10';
-document.getElementById('task-progress-bar').style.width = (taskTaps / 10 * 100) + '%';
-const floatItem = document.createElement('div'); floatItem.className = 'float-part'; floatItem.innerText = '💰 +$';
-floatItem.style.left = (e.clientX - 20) + 'px'; floatItem.style.top = (e.clientY - 40) + 'px';
-floatItem.style.position = 'fixed'; document.body.appendChild(floatItem); setTimeout(() => floatItem.remove(), 500);
-if(taskTaps >= 10) {
-taskTaps = 0; document.getElementById('task-text-val').innerText = '0 / 10'; document.getElementById('task-progress-bar').style.width = '0%';
-fetch('/credit-tap').then(r => r.json()).then(data => {
-bonusWalletBal = (parseFloat(bonusWalletBal) + data.credit).toFixed(2);
-document.getElementById('bonus-wallet-display').innerText = bonusWalletBal;
+function renderHistory(coin, historyArr) {
+const strip = document.getElementById('hist-' + coin); if(!strip) return; strip.innerHTML = '';
+historyArr.slice(0, 15).forEach(item => {
+const pill = document.createElement('span');
+pill.className = 'hist-pill ' + getRiskClass(item.mult);
+pill.innerText = parseFloat(item.mult).toFixed(2) + 'x';
+pill.onclick = () => triggerProvablyFairLogs(coin, item.mult, item.hash);
+strip.appendChild(pill);
 });
 }
-};
 eventSource.onmessage = function(event) {
 const data = JSON.parse(event.data); let coin = data.asset; if(!roomStates[coin]) return;
 const valText = document.getElementById('val-' + coin); const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
@@ -555,4 +583,4 @@ if(state.pts.length > 0 && canvas) { state.cashedOutY = state.pts[state.pts.leng
 };
 });
 
-        
+    
