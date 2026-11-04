@@ -30,40 +30,173 @@
         .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 5; }
         .page { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .active-page { display: flex; }
-        /* PAGE 1 PLATFORM CONFIGURATIONS */
-        #page-1 { justify-content: space-between; padding: 6px 0; }
-        .progress-container { background: #ffffff; border: 1px solid #e2e8f0; padding: 14px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-        .bar-wrapper { margin-bottom: 10px; }
-        .bar-wrapper:last-child { margin-bottom: 0; }
-        .bar-label { font-size: 10px; color: #64748b; font-weight: 800; margin-bottom: 5px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
-        .outer-bar { width: 100%; height: 10px; background: #e2e8f0; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
-        .inner-bar { height: 100%; width: 0%; transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tap-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+    <div id="system-modal" class="modal-mask" onclick="closeModal()">
+        <div class="modal-frame" onclick="event.stopPropagation()">
+            <div class="modal-title" id="modal-header-text">System Action</div>
+            <div class="modal-body-text" id="modal-body-content">Connecting...</div>
+            <button class="launch-btn" style="padding:10px; font-size:11px; box-shadow:none; transform:none;" onclick="closeModal()">Close Console Panel</button>
+        </div>
+    </div>
+    
+    <div style="position: absolute; top:0; right:0; height:100%; z-index:150; pointer-events:none;">
+        <div id="chat-panel" class="chat-drawer" style="pointer-events: auto;">
+            <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
+            <div style="font-size:12px; font-weight:800; color:#d97706; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
+            <div class="chat-messages" id="chat-box-stream">
+                <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
+                <div class="chat-msg"><b style="color:#eab308;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
+                <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-message-input" class="chat-inp" placeholder="Type message...">
+                <button class="nav-act-btn" style="padding:0 12px;" onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="phone-header">
+        <div class="logo-container">
+            <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://w3.org">
+                <circle cx="20" cy="20" r="16" fill="url(#chromeGradient)" stroke="#cbd5e1" stroke-width="2"/>
+                <path d="M14 13.5L26 26.5M26 13.5L14 26.5" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round"/>
+                <text x="44" y="26" fill="#1e293b" font-family="-apple-system" font-weight="900" font-size="16" letter-spacing="1">CRYPTO X</text>
+                <defs>
+                    <linearGradient id="chromeGradient" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="50%" stop-color="#e2e8f0"/>
+                        <stop offset="100%" stop-color="#94a3b8"/>
+                    </linearGradient>
+                    <linearGradient id="goldGradient" x1="14" y1="13.5" x2="26" y2="26.5" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffe066"/>
+                        <stop offset="50%" stop-color="#f5a623"/>
+                        <stop offset="100%" stop-color="#d97706"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
+    <div class="hud-top-dashboard" id="hud-master-desk">
+        <div class="action-link-cluster">
+            <button class="nav-act-btn" onclick="triggerModal('Deposit')">Deposit</button>
+            <button class="nav-act-btn" onclick="triggerModal('Withdraw')">Withdraw</button>
+            <button class="nav-act-btn" onclick="triggerModal('Transactions')">Transactions</button>
+        </div>
+        <div class="wallet-display-cluster" id="wallet-anchor-zone">
+            <div class="hud-card card-true">
+                <span class="hud-label">💵 TRUE WALLET</span>
+                <div class="hud-val">$<span id="true-wallet-display">0.00</span></div>
+            </div>
+            <div class="hud-card card-bonus">
+                <span class="hud-label">🎁 BONUS WALLET</span>
+                <div class="hud-val">$<span id="bonus-wallet-display">0.00</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="phone-body">
+        <div id="page-1" class="page active-page">
+            <div class="progress-container">
+                <div class="bar-wrapper">
+                    <div class="bar-label"><span>Daily Mining limit</span><span id="daily-text-val">0 / 300</span></div>
+                    <div class="outer-bar"><div class="inner-bar" id="daily-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
+                </div>
+                <div class="bar-wrapper">
+                    <div class="bar-label"><span>Task Progress bundle</span><span id="task-text-val">0 / 10</span></div>
+                    <div class="outer-bar"><div class="inner-bar" id="task-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
+                </div>
+            </div>
+            <div class="tap-container">
+                <div class="tap-zone" id="x-node-core">X</div>
+            </div>
+            <p class="msg-desc">Earn first wager package within 1 minute & ready to place bet.</p>
+            <button class="launch-btn" onclick="switchPage(2)">Launch Terminal 🚀</button>
+            <div class="footer-row">
+                <span class="foot-link" onclick="triggerModal('Referrals')">👥 Refer & Earn</span>
+                <span class="foot-link" onclick="triggerModal('Support')">❓ Help & Support</span>
+            </div>
+        </div>
         
-        /* 3D GOLDEN CLICK ENGINE TACTILITY */
-        .tap-zone { width: 160px; height: 160px; border-radius: 80px; background: linear-gradient(135deg, #ffe066 0%, #f5a623 50%, #d97706 100%); display: flex; align-items: center; justify-content: center; font-size: 82px; font-weight: 900; color: #ffffff; cursor: pointer; position: relative; border: 4px solid #fff59d; box-shadow: 0 10px 0px #b45309, 0 15px 25px rgba(180,83,9,0.4), inset 0 4px 8px rgba(255,255,255,0.6); transition: transform 0.05s ease, box-shadow 0.05s ease; text-shadow: 3px 3px 0px #92400e; z-index: 6; }
-        .tap-zone:active { transform: translateY(8px); box-shadow: 0 2px 0px #b45309, 0 4px 10px rgba(180,83,9,0.3), inset 0 2px 4px rgba(255,255,255,0.4); }
-        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 32px; animation: popUp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; pointer-events: none; text-shadow: 0 0 12px rgba(16,185,129,0.6); z-index: 10; }
-        @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-110px) scale(1.4); } }
-        .msg-desc { font-size: 11px; color: #64748b; text-align: center; margin: 0 16px; line-height: 1.6; font-weight: 600; }
-        
-        /* 3D TRI-TONE ARCADE LAUNCH KEY */
-        .launch-btn { width: 100%; background: linear-gradient(90deg, #ffb61a 0%, #008be3 50%, #f6465d 100%); border: none; padding: 18px; border-radius: 16px; color: white; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.05s ease; z-index: 6; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 0px #0b1a3a, 0 12px 20px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.3); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
-        .launch-btn:active { transform: translateY(6px); box-shadow: 0 2px 0px #0b1a3a, 0 4px 8px rgba(0,0,0,0.2); }
-        .footer-row { display: flex; justify-content: space-between; padding: 6px 6px 0 6px; align-items: center; }
-        .foot-link { color: #000000; font-size: 11px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
-        
-        /* 🕹️ PAGE 2 LUXURY GREY FLOOR MATRIX */
-        #page-2 { gap: 10px; background: #e2e8f0; margin: -12px; padding: 12px; height: calc(100% + 24px); }
-        .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 2px solid #cbd5e1; margin-bottom: 2px; }
-        
-        /* DYNAMIC ROUNDED PURE WHITE TERMINAL CARDS */
-        .chart-card { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; position: relative; box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .coin-badge { font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 0.7px; display: flex; align-items: center; gap: 6px; }
-        .mult-val { font-family: monospace; font-size: 23px; font-weight: 900; letter-spacing: -0.5px; }
-        .canvas-box { width: 100%; flex: 1; background: #fafafa; border-radius: 14px; border: 1px solid #e2e8f0; margin: 4px 0; box-shadow: inset 0 2px 6px rgba(0,0,0,0.04); }
-        /* SWIPABLE HISTORY ELEMENT STRIPS & RISK COLOR BRACKETS */
+        <div id="page-2" class="page">
+            <div class="arena-subheader">
+                <button class="nav-act-btn" style="background:#e63946; color:white; border:none; padding:3px 10px; height:24px; font-size:10px; display:flex; align-items:center;" onclick="switchPage(1)">◀ Back</button>
+                <span style="font-size:10px; font-weight:900; color:#475569; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
+            </div>
+            
+            <div class="chart-card" id="card-TON">
+                <div class="chart-header">
+                    <span class="coin-badge" style="color: #00a6ff;">💎 TON Engine</span>
+                    <span class="mult-val" id="val-TON" style="color:#10b981;">1.00x</span>
+                </div>
+                <div class="history-strip" id="hist-TON"></div>
+                <canvas class="canvas-box" id="canvas-TON" width="360" height="75"></canvas>
+                <div class="bet-desk-grid">
+                    <div class="input-row-wrap">
+                        <input type="number" id="input-TON" class="stake-inp" value="0.10" min="0.01" step="0.01">
+                    </div>
+                    <button class="wide-action-btn" id="btn-TON">OPEN MARGIN</button>
+                </div>
+            </div>
+            
+            <div class="chart-card" id="card-NOT">
+                <div class="chart-header">
+                    <span class="coin-badge" style="color: #eab308;">🚀 NOT Canvas</span>
+                    <span class="mult-val" id="val-NOT" style="color:#10b981;">1.00x</span>
+                </div>
+                <div class="history-strip" id="hist-NOT"></div>
+                <canvas class="canvas-box" id="canvas-NOT" width="360" height="75"></canvas>
+                <div class="bet-desk-grid">
+                    <div class="input-row-wrap">
+                        <input type="number" id="input-NOT" class="stake-inp" value="0.10" min="0.01" step="0.01">
+                    </div>
+                    <button class="wide-action-btn" id="btn-NOT">OPEN MARGIN</button>
+                </div>
+            </div>
+            
+            <div class="chart-card" id="card-DOGS">
+                <div class="chart-header">
+                    <span class="coin-badge" style="color: #f6465d;">🐶 DOGS Arena</span>
+                    <span class="mult-val" id="val-DOGS" style="color:#10b981;">1.00x</span>
+                </div>
+                <div class="history-strip" id="hist-DOGS"></div>
+                <canvas class="canvas-box" id="canvas-DOGS" width="360" height="75"></canvas>
+                <div class="bet-desk-grid">
+                    <div class="input-row-wrap">
+                        <input type="number" id="input-DOGS" class="stake-inp" value="0.10" min="0.01" step="0.01">
+                    </div>
+                    <button class="wide-action-btn" id="btn-DOGS">OPEN MARGIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const eventSource = new EventSource('/stream');
+    let trueWalletBal = 0.00; let bonusWalletBal = 0.00;
+    let dailyTaps = 0; let taskTaps = 0;
+    let roomStates = {
+        TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+        NOT: { hasBet: false, amt: 0, pts: [], color: '#eab308', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+        DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0, offsetX: 0 }
+    };
+
+    let audioCtx = null;
+    function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
+    
+    function playSynthSound(freq, type, duration, vol) {
+        initAudio(); try {
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
+        } catch(e) {}
+    }
+    function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
+    function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
+    function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
+/* SWIPABLE HISTORY ELEMENT STRIPS & RISK COLOR BRACKETS */
         .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
         .history-strip::-webkit-scrollbar { height: 4px; }
         .history-strip::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
@@ -105,7 +238,7 @@
 </head>
 <body>
 <div class="phone-frame">
-    <div id="system-modal" class="modal-mask" onclick="closeModal()">
+<div id="system-modal" class="modal-mask" onclick="closeModal()">
         <div class="modal-frame" onclick="event.stopPropagation()">
             <div class="modal-title" id="modal-header-text">System Action</div>
             <div class="modal-body-text" id="modal-body-content">Connecting...</div>
@@ -421,3 +554,5 @@ if(state.pts.length > 0 && canvas) { state.cashedOutY = state.pts[state.pts.leng
 }
 };
 });
+
+        
