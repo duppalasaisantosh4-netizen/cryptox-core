@@ -2,16 +2,18 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { createClient } = require('@supabase/supabase-js');
 
+// INITIALIZE SECURE CLOUD HANDSHAKE INTERFACES
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let clients = []; 
 let rooms = {
     TON: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] },
     NOT: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] },
-    DOGS: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] }
+    XCOIN: { multiplier: 1.00, status: 'WAITING', countdown: 5, crashPoint: 0, serverSeed: '', history: [] }
 };
 
 function generateProvablyFairSeed(coin) {
@@ -24,13 +26,10 @@ function startRoomLifecycle(coin) {
     let r = rooms[coin]; r.status = 'WAITING'; r.multiplier = 1.00; r.countdown = 5;
     let publicCommit = generateProvablyFairSeed(coin);
     
-    // IRONCLAD 35x MAXIMUM RISK ENGINE SHIELD
+    // VIRAL HYPE MARKETING SWITCH - ALLOWS HIGH MULTIPLIERS FOR SMALL TEST USER LOOPS
     let rawRandom = Math.random();
     let calculatedCrash = parseFloat((rawRandom * (35.00 - 1.05) + 1.10).toFixed(2));
-    
-    if (calculatedCrash > 35.00 || Math.random() < 0.15) {
-        calculatedCrash = parseFloat((Math.random() * (4.50 - 1.10) + 1.10).toFixed(2));
-    }
+    if (calculatedCrash > 35.00) calculatedCrash = 35.00;
     r.crashPoint = calculatedCrash;
 
     function tick() {
@@ -59,9 +58,9 @@ function executeFlight(coin) {
         sendEvent({ type: 'GAME_LIQUIDATED', asset: coin, finalMultiplier: r.multiplier, history: r.history }); 
         setTimeout(() => startRoomLifecycle(coin), 3000);
     } else {
-        let increment = 0.012;
-        if (r.multiplier > 5.00) increment = 0.045;
-        if (r.multiplier > 15.00) increment = 0.120;
+        let increment = 0.015;
+        if (r.multiplier > 5.00) increment = 0.050;
+        if (r.multiplier > 15.00) increment = 0.150;
         
         r.multiplier = parseFloat((r.multiplier + increment).toFixed(3));
         sendEvent({ type: 'TICK', asset: coin, multiplier: r.multiplier }); 
@@ -74,25 +73,56 @@ function sendEvent(data) {
     clients.forEach(c => c.write(payload)); 
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
-    // EXPLICIT SYSTEM HEARTBEAT ROUTER - KEEPS CONTAINER LIVE 24/7/365
     if (req.url.startsWith('/keep-alive-ping')) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'AWAKE', timestamp: Date.now() }));
         return;
     }
+    
+    // BUFFER OVERRIDE BYPASS SHIELD
     if (req.url.startsWith('/stream')) {
-        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
+        res.writeHead(200, { 
+            'Content-Type': 'text/event-stream', 
+            'Cache-Control': 'no-cache', 
+            'Connection': 'keep-alive',
+            'X-Accel-Buffering': 'no' 
+        });
         clients.push(res); req.on('close', () => { clients = clients.filter(c => c !== res); }); return;
     }
+
+    // SYNCED TAP FAUCET ROUTER WITH YOUR EXACT SUPABASE COLUMNS
     if (req.url.startsWith('/credit-tap')) {
+        let urlObj = new URL(req.url, 'http://localhost');
+        let userId = urlObj.searchParams.get('user_id') || 'test-user-uuid';
+        
+        try {
+            let { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', userId).single();
+            if (wallet) {
+                let nextTaps = (wallet.daily_taps || 0) + 1;
+                let bonusAdd = 0.00;
+                
+                if (nextTaps % 10 === 0) { bonusAdd = 0.10; }
+
+                await supabase.from('wallets').update({
+                    daily_taps: nextTaps,
+                    bonus_balance: parseFloat((wallet.bonus_balance + bonusAdd).toFixed(2))
+                }).eq('user_id', userId);
+                
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ status: 'SUCCESS', daily_taps: nextTaps, bonus_balance: wallet.bonus_balance + bonusAdd }));
+                return;
+            }
+        } catch(e) {}
+        
         res.writeHead(200, { 'Content-Type': 'application/json' }); 
         res.end(JSON.stringify({ status: 'SUCCESS', credit: 0.01 })); 
         return;
     }
+
     if (req.url.startsWith('/place-bet') || req.url.startsWith('/cashout')) {
         let urlObj = new URL(req.url, 'http://localhost');
         let coin = urlObj.searchParams.get('asset');
@@ -118,5 +148,5 @@ const server = http.createServer((req, res) => {
 const PORT = process.env.PORT || 10000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log('🔥 CRYPTO X VAULT ENGINE OPERATIONAL ON PORT ' + PORT);
-    startRoomLifecycle('TON'); startRoomLifecycle('NOT'); startRoomLifecycle('DOGS');
+    startRoomLifecycle('TON'); startRoomLifecycle('NOT'); startRoomLifecycle('XCOIN');
 });
