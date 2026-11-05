@@ -1,10 +1,15 @@
 {
-  "name": "crypto-x-engine",
+  "name": "cryptox-core",
   "version": "1.0.0",
-  "description": "",
+  "description": "Crypto X Premium Master Terminal Engine",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.1"
+  },
+  "engines": {
+    "node": "24.x"
+  }
 }
