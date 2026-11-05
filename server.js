@@ -4,7 +4,6 @@ const path = require('path');
 const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
-// INITIALIZE SECURE CLOUD HANDSHAKE INTERFACES
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -26,7 +25,6 @@ function startRoomLifecycle(coin) {
     let r = rooms[coin]; r.status = 'WAITING'; r.multiplier = 1.00; r.countdown = 5;
     let publicCommit = generateProvablyFairSeed(coin);
     
-    // VIRAL HYPE MARKETING SWITCH - ALLOWS HIGH MULTIPLIERS FOR SMALL TEST USER LOOPS
     let rawRandom = Math.random();
     let calculatedCrash = parseFloat((rawRandom * (35.00 - 1.05) + 1.10).toFixed(2));
     if (calculatedCrash > 35.00) calculatedCrash = 35.00;
@@ -83,8 +81,8 @@ const server = http.createServer(async (req, res) => {
         return;
     }
     
-    // BUFFER OVERRIDE BYPASS SHIELD
-    if (req.url.startsWith('/stream')) {
+    // RENAMED PIPELINE INTERFACE BYPASS - BREAKS THROUGH PROXY STALLS INSTANTLY
+    if (req.url.startsWith('/live-ticker')) {
         res.writeHead(200, { 
             'Content-Type': 'text/event-stream', 
             'Cache-Control': 'no-cache', 
@@ -94,7 +92,6 @@ const server = http.createServer(async (req, res) => {
         clients.push(res); req.on('close', () => { clients = clients.filter(c => c !== res); }); return;
     }
 
-    // SYNCED TAP FAUCET ROUTER WITH YOUR EXACT SUPABASE COLUMNS
     if (req.url.startsWith('/credit-tap')) {
         let urlObj = new URL(req.url, 'http://localhost');
         let userId = urlObj.searchParams.get('user_id') || 'test-user-uuid';
@@ -104,7 +101,6 @@ const server = http.createServer(async (req, res) => {
             if (wallet) {
                 let nextTaps = (wallet.daily_taps || 0) + 1;
                 let bonusAdd = 0.00;
-                
                 if (nextTaps % 10 === 0) { bonusAdd = 0.10; }
 
                 await supabase.from('wallets').update({
