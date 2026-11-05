@@ -5,23 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Crypto X Premium Terminal</title>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        * { 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            user-select: none; 
+            -webkit-user-select: none; 
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent;
+        }
         
-        body { background-color: #ffffff; color: #1e293b; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; -webkit-text-size-adjust: 100%; }
-        .phone-frame { width: 100%; height: 100%; max-width: 412px; background: #fafafa; display: flex; flex-direction: column; position: relative; overflow: hidden; border: none; }
+        body { 
+            background-color: #ffffff; 
+            color: #1e293b; 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            -webkit-text-size-adjust: 100%;
+        }
         
-        .phone-header { background: #ffffff; padding: 6px 12px; border-bottom: 1px solid #edf2f7; display: flex; justify-content: center; align-items: center; height: 46px; z-index: 10; }
+        .phone-frame { 
+            width: 100%; 
+            height: 100%; 
+            max-width: 412px; 
+            background: #fafafa; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .phone-header { 
+            background: #ffffff; 
+            padding: 6px 12px; 
+            border-bottom: 1px solid #edf2f7; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 46px; 
+            z-index: 10; 
+        }
         .logo-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .hud-top-dashboard { display: flex; justify-content: space-between; padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #f1f5f9; gap: 10px; min-height: 80px; z-index: 10; }
+        .hud-top-dashboard { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 8px 12px; 
+            background: #ffffff; 
+            border-bottom: 1px solid #f1f5f9; 
+            gap: 12px; 
+            min-height: 95px; 
+            z-index: 10; 
+        }
         
-        .action-link-cluster { display: flex; flex-direction: column; gap: 4px; justify-content: center; width: 42%; }
-        .nav-act-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s ease; text-align: center; }
+        .action-link-cluster { display: flex; flex-direction: column; gap: 4px; justify-content: center; width: 44%; }
+        .nav-act-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
         .nav-act-btn:active { background: #cbd5e1; color: #1e293b; transform: scale(0.96); }
         
-        .wallet-display-cluster { display: flex; flex-direction: column; gap: 4px; width: 54%; justify-content: center; position: relative; }
-        .hud-card { padding: 4px 10px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        .wallet-display-cluster { display: flex; flex-direction: column; gap: 4px; width: 52%; justify-content: center; position: relative; }
+        .hud-card { padding: 4px 8px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .hud-label { font-size: 8px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+        .hud-sub-label { font-size: 7px; opacity: 0.8; font-weight: 600; margin-top: -1px; }
         .hud-val { font-size: 12px; font-weight: 900; font-family: monospace; margin-top: 1px; }
         
         .card-true { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: 1px solid #047857; }
@@ -31,27 +79,78 @@
         .page { display: none; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .active-page { display: flex; }
 
-        #page-1 { justify-content: space-between; padding: 6px 0; }
-        .progress-container { background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        #page-1 { 
+            justify-content: flex-start !important; 
+            gap: 16px !important; 
+            padding: 4px 0; 
+        }
+        
+        .progress-container { background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 16px; }
         .bar-wrapper { margin-bottom: 8px; }
         .bar-wrapper:last-child { margin-bottom: 0; }
         .bar-label { font-size: 10px; color: #64748b; font-weight: 800; margin-bottom: 4px; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px; }
-        .outer-bar { width: 100%; height: 9px; background: #e2e8f0; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .outer-bar { width: 100%; height: 9px; background: #e2e8f0; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e1; }
         .inner-bar { height: 100%; width: 0%; transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tap-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 180px; }
         
-        .tap-zone { width: 150px; height: 150px; border-radius: 75px; background: linear-gradient(135deg, #ffe066 0%, #f5a623 50%, #d97706 100%); display: flex; align-items: center; justify-content: center; font-size: 76px; font-weight: 900; color: #ffffff; cursor: pointer; position: relative; border: 4px solid #fff59d; box-shadow: 0 8px 0px #b45309, 0 12px 20px rgba(180,83,9,0.35), inset 0 4px 8px rgba(255,255,255,0.6); transition: transform 0.05s ease, box-shadow 0.05s ease; text-shadow: 3px 3px 0px #92400e; z-index: 6; }
+        .tap-container { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            margin: 20px 0 !important;
+            min-height: 160px;
+        }
+        
+        .tap-zone { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 75px; 
+            background: linear-gradient(135deg, #ffe066 0%, #f5a623 50%, #d97706 100%); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 76px; 
+            font-weight: 900; 
+            color: #ffffff; 
+            cursor: pointer; 
+            position: relative; 
+            border: 4px solid #fff59d; 
+            box-shadow: 0 8px 0px #b45309, 0 12px 20px rgba(180,83,9,0.35), inset 0 4px 8px rgba(255,255,255,0.6); 
+            text-shadow: 3px 3px 0px #92400e; 
+            z-index: 20; 
+            pointer-events: auto !important;
+        }
         .tap-zone:active { transform: translateY(6px); box-shadow: 0 2px 0px #b45309, 0 4px 8px rgba(180,83,9,0.25), inset 0 2px 4px rgba(255,255,255,0.4); }
-        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; pointer-events: none; text-shadow: 0 0 12px rgba(16,185,129,0.6); z-index: 10; }
+        
+        .float-part { position: absolute; color: #10b981; font-weight: 900; font-size: 28px; animation: popUp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; pointer-events: none; text-shadow: 0 0 12px rgba(16,185,129,0.6); z-index: 50; }
         @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(0.7); } 100% { opacity: 0; transform: translateY(-100px) scale(1.3); } }
+        
         .msg-desc { font-size: 11px; color: #64748b; text-align: center; margin: 4px 16px; line-height: 1.5; font-weight: 600; }
         
-        .launch-btn { width: 100%; background: linear-gradient(90deg, #ffb61a 0%, #008be3 50%, #f6465d 100%); border: none; padding: 14px; border-radius: 14px; color: white; font-weight: 900; font-size: 13px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.05s ease; z-index: 6; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 6px 0px #0b1a3a, 0 10px 15px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3); text-shadow: 0 1px 3px rgba(0,0,0,0.5); margin-top: 4px; }
+        .launch-btn { 
+            width: 100%; 
+            background: linear-gradient(90deg, #ffb61a 0%, #008be3 50%, #f6465d 100%); 
+            border: none; 
+            padding: 14px; 
+            border-radius: 14px; 
+            color: white; 
+            font-weight: 900; 
+            font-size: 13px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            z-index: 20; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            box-shadow: 0 6px 0px #0b1a3a, 0 10px 15px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3); 
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+            margin-top: auto; 
+            pointer-events: auto !important;
+        }
         .launch-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #0b1a3a, 0 4px 6px rgba(0,0,0,0.1); }
         
         .footer-row { display: flex; justify-content: space-between; padding: 8px 4px 0 4px; align-items: center; }
         .foot-link { color: #000000; font-size: 10px; font-weight: 800; text-decoration: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
-
+        
         #page-2 { gap: 10px; background: #e2e8f0; margin: -8px -12px; padding: 12px; height: calc(100% + 16px); }
         .arena-subheader { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; height: 32px; border-bottom: 2px solid #cbd5e1; margin-bottom: 2px; }
         
@@ -64,8 +163,7 @@
         .history-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; white-space: nowrap; max-width: 100%; -webkit-overflow-scrolling: touch; }
         .history-strip::-webkit-scrollbar { height: 4px; }
         .history-strip::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
-        .hist-pill { display: inline-block; border: 1px solid rgba(0,0,0,0.08); font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.1s ease; }
-        .hist-pill:active { transform: scale(0.93); }
+        .hist-pill { display: inline-block; border: 1px solid rgba(0,0,0,0.08); font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         
         .pill-red { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
         .pill-green { background: #dcfce7; color: #10b981; border-color: #86efac; }
@@ -75,364 +173,143 @@
 
         .bet-desk-grid { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
         .input-row-wrap { display: flex; gap: 8px; width: 100%; height: 36px; }
-        .stake-inp { width: 100%; height: 100%; background: #f8fafc; color: #d97706; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
-        .wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #334155, #1e293b); border: 1px solid #475569; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 4px 0px #0f172a; transition: all 0.05s ease; }
-        .wide-action-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #0f172a; }
+        .stake-inp { width: 100%; height: 100%; background: #f8fafc; color: #d97706; border: 1px solid #cbd5e1; padding: 0 12px; font-size: 14px; font-weight: 900; border-radius: 10px; font-family: monospace; outline: none; text-align: center; }
+.wide-action-btn { width: 100%; height: 38px; border: none; font-size: 12px; font-weight: 900; border-radius: 10px; cursor: pointer; color: white; background: linear-gradient(180deg, #334155, #1e293b); border: 1px solid #475569; text-transform: uppercase; letter-spacing: 0.7px; box-shadow: 0 4px 0px #0f172a; transition: all 0.05s ease; }
+.wide-action-btn:active { transform: translateY(4px); box-shadow: 0 0px 0px #0f172a; }
+.modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-frame { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.modal-title { font-size: 14px; font-weight: 900; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-body-text { font-size: 12px; color: #64748b; line-height: 1.5; font-weight: 500; white-space: pre-line; }
+.chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: #ffffff; border-left: 2px solid #e2e8f0; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.05); pointer-events: auto; }
+.chat-drawer-open { display: flex !important; }
+.chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #cbd5e1; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #475569; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #cbd5e1; border-right: none; pointer-events: auto; }
+.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.chat-msg { background: #f8fafc; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #e2e8f0; font-size: 11px; }
+.chat-input-row { display: flex; gap: 4px; height: 36px; }
+.chat-inp { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
+.prize-floater-alert { position: absolute; color: #10b981; font-weight: 900; font-size: 24px; animation: flyUpHUD 0.8s ease-out forwards; pointer-events: none; z-index: 100; text-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+@keyframes flyUpHUD { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
 
-        .modal-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-frame { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .modal-title { font-size: 14px; font-weight: 900; color: #d97706; text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-body-text { font-size: 12px; color: #64748b; line-height: 1.5; font-weight: 500; white-space: pre-line; }
-        
-        .chat-drawer { position: absolute; top: 0; right: 0; width: 280px; height: 100%; background: #ffffff; border-left: 2px solid #e2e8f0; z-index: 200; display: none; flex-direction: column; padding: 14px; box-shadow: -10px 0 30px rgba(0,0,0,0.05); pointer-events: auto; }
-        .chat-drawer-open { display: flex !important; }
-        .chat-toggle-handle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 100px; background: #cbd5e1; border-radius: 10px 0 0 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #475569; cursor: pointer; writing-mode: vertical-lr; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #cbd5e1; border-right: none; pointer-events: auto; }
-        .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-        .chat-msg { background: #f8fafc; padding: 8px 10px; border-radius: 8px; line-height: 1.4; border: 1px solid #e2e8f0; font-size: 11px; }
-        .chat-input-row { display: flex; gap: 4px; height: 36px; }
-        .chat-inp { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; padding: 0 10px; font-size: 12px; border-radius: 8px; outline: none; }
-        
-        .prize-floater-alert { position: absolute; color: #10b981; font-weight: 900; font-size: 24px; animation: flyUpHUD 0.8s ease-out forwards; pointer-events: none; z-index: 100; text-shadow: 0 2px 10px rgba(16,185,129,0.4); }
-        @keyframes flyUpHUD { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
-    </style>
-    <!-- MASTER SUPABASE CLIENT CONNECTIONS DISTRIBUTION BUNDLE SDK -->
-<script src="https://jsdelivr.net"></script>
-</head>
-<body>
-<div class="phone-frame">
 
-        <div id="system-modal" class="modal-mask" onclick="closeModal()">
-        <div class="modal-frame" onclick="event.stopPropagation()">
-            <div class="modal-title" id="modal-header-text">System Action</div>
-            <div class="modal-body-text" id="modal-body-content">Connecting...</div>
-            <button class="launch-btn" style="padding:10px; font-size:11px; box-shadow:none; transform:none;" onclick="closeModal()">Close Console Panel</button>
-        </div>
-    </div>
-    
-    <div style="position: absolute; top:0; right:0; height:100%; z-index:150; pointer-events:none;">
-        <div id="chat-panel" class="chat-drawer" style="pointer-events: auto;">
-            <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
-            <div style="font-size:12px; font-weight:800; color:#d97706; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
-            <div class="chat-messages" id="chat-box-stream">
-                <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
-                <div class="chat-msg"><b style="color:#eab308;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
-                <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
-            </div>
-            <div class="chat-input-row">
-                <input type="text" id="chat-message-input" class="chat-inp" placeholder="Type message...">
-                <button class="nav-act-btn" style="padding:0 12px;" onclick="sendChatMessage()">Send</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="phone-header">
-        <div class="logo-container">
-            <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://w3.org">
-                <circle cx="20" cy="20" r="16" fill="url(#chromeGradient)" stroke="#cbd5e1" stroke-width="2"/>
-                <path d="M14 13.5L26 26.5M26 13.5L14 26.5" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round"/>
-                <text x="44" y="26" fill="#1e293b" font-family="-apple-system" font-weight="900" font-size="16" letter-spacing="1">CRYPTO X</text>
-                <defs>
-                    <linearGradient id="chromeGradient" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="50%" stop-color="#e2e8f0"/>
-                        <stop offset="100%" stop-color="#94a3b8"/>
-                    </linearGradient>
-                    <linearGradient id="goldGradient" x1="14" y1="13.5" x2="26" y2="26.5" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ffe066"/>
-                        <stop offset="50%" stop-color="#f5a623"/>
-                        <stop offset="100%" stop-color="#d97706"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-        </div>
-    </div>
 
-    <div class="hud-top-dashboard" id="hud-master-desk">
-        <div class="action-link-cluster">
-            <button class="nav-act-btn" onclick="triggerModal('Deposit')">Deposit</button>
-            <button class="nav-act-btn" onclick="triggerModal('Withdraw')">Withdraw</button>
-            <button class="nav-act-btn" onclick="triggerModal('Transactions')">Transactions</button>
-        </div>
-        <div class="wallet-display-cluster" id="wallet-anchor-zone">
-            <div class="hud-card card-true">
-                <span class="hud-label">💵 TRUE WALLET</span>
-                <div class="hud-val">$<span id="true-wallet-display">0.00</span></div>
-            </div>
-            <div class="hud-card card-bonus">
-                <span class="hud-label">🎁 BONUS WALLET</span>
-                <div class="hud-val">$<span id="bonus-wallet-display">0.00</span></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="phone-body">
-        <div id="page-1" class="page active-page">
-            <div class="progress-container">
-                <div class="bar-wrapper">
-                    <div class="bar-label"><span>Daily Mining limit</span><span id="daily-text-val">0 / 300</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="daily-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
-                </div>
-                <div class="bar-wrapper">
-                    <div class="bar-label"><span>Task Progress bundle</span><span id="task-text-val">0 / 10</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="task-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
-                </div>
-            </div>
-            <div class="tap-container">
-                <div class="tap-zone" id="x-node-core">X</div>
-            </div>
-            <p class="msg-desc">Earn first wager package within 1 minute & ready to place bet.</p>
-            <button class="launch-btn" onclick="switchPage(2)">Launch Terminal 🚀</button>
-            <div class="footer-row">
-                <span class="foot-link" onclick="triggerModal('Referrals')">👥 Refer & Earn</span>
-                <span class="foot-link" onclick="triggerModal('Support')">❓ Help & Support</span>
-            </div>
-        </div>
-        
-        <div id="page-2" class="page">
-            <div class="arena-subheader">
-                <button class="nav-act-btn" style="background:#e63946; color:white; border:none; padding:3px 10px; height:24px; font-size:10px; display:flex; align-items:center;" onclick="switchPage(1)">◀ Back</button>
-                <span style="font-size:10px; font-weight:900; color:#475569; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
-            </div>
-            
-            <div class="chart-card" id="card-TON">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #00a6ff;">💎 TON Engine</span>
-                    <span class="mult-val" id="val-TON" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-TON"></div>
-                <canvas class="canvas-box" id="canvas-TON" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-TON" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-TON">OPEN MARGIN</button>
-                </div>
-            </div>
-            
-            <div class="chart-card" id="card-NOT">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #eab308;">🚀 NOT Canvas</span>
-                    <span class="mult-val" id="val-NOT" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-NOT"></div>
-                <canvas class="canvas-box" id="canvas-NOT" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-NOT" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-NOT">OPEN MARGIN</button>
-                </div>
-            </div>
-            
-            <div class="chart-card" id="card-DOGS">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #f6465d;">🐶 DOGS Arena</span>
-                    <span class="mult-val" id="val-DOGS" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-DOGS"></div>
-                <canvas class="canvas-box" id="canvas-DOGS" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-DOGS" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-DOGS">OPEN MARGIN</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    const eventSource = new EventSource('/stream');
-    let trueWalletBal = 0.00; let bonusWalletBal = 0.00;
-    let dailyTaps = 0; let taskTaps = 0;
-    let roomStates = {
-        TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
-        NOT: { hasBet: false, amt: 0, pts: [], color: '#eab308', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
-        DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0, offsetX: 0 }
-    };
+System Action
+Connecting...
+Close Console Panel
 
-    let audioCtx = null;
-    function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
-    
-    function playSynthSound(freq, type, duration, vol) {
-        initAudio(); try {
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
-        } catch(e) {}
-    }
-    function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
-    function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
-    function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
-<div id="system-modal" class="modal-mask" onclick="closeModal()">
-        <div class="modal-frame" onclick="event.stopPropagation()">
-            <div class="modal-title" id="modal-header-text">System Action</div>
-            <div class="modal-body-text" id="modal-body-content">Connecting...</div>
-            <button class="launch-btn" style="padding:10px; font-size:11px; box-shadow:none; transform:none;" onclick="closeModal()">Close Console Panel</button>
-        </div>
-    </div>
-    
-    <div style="position: absolute; top:0; right:0; height:100%; z-index:150; pointer-events:none;">
-        <div id="chat-panel" class="chat-drawer" style="pointer-events: auto;">
-            <div class="chat-toggle-handle" onclick="toggleChat()">💬 Chat Room</div>
-            <div style="font-size:12px; font-weight:800; color:#d97706; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Global Chat Feed</div>
-            <div class="chat-messages" id="chat-box-stream">
-                <div class="chat-msg"><b style="color:#00a6ff;">TON_Trader:</b> Let's go TON hit 35x!!! 💎</div>
-                <div class="chat-msg"><b style="color:#eab308;">Not_King:</b> Just cashed out at 4.5x on Notcoin! 🔥</div>
-                <div class="chat-msg"><b style="color:#f6465d;">DOGS_Fan:</b> Graph trajectories look solid.</div>
-            </div>
-            <div class="chat-input-row">
-                <input type="text" id="chat-message-input" class="chat-inp" placeholder="Type message...">
-                <button class="nav-act-btn" style="padding:0 12px;" onclick="sendChatMessage()">Send</button>
-            </div>
-        </div>
-    </div>
+💬 Chat Room
+Global Chat Feed
 
-    <div class="phone-header">
-        <div class="logo-container">
-            <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://w3.org">
-                <circle cx="20" cy="20" r="16" fill="url(#chromeGradient)" stroke="#cbd5e1" stroke-width="2"/>
-                <path d="M14 13.5L26 26.5M26 13.5L14 26.5" stroke="url(#goldGradient)" stroke-width="5" stroke-linecap="round"/>
-                <text x="44" y="26" fill="#1e293b" font-family="-apple-system" font-weight="900" font-size="16" letter-spacing="1">CRYPTO X</text>
-                <defs>
-                    <linearGradient id="chromeGradient" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="50%" stop-color="#e2e8f0"/>
-                        <stop offset="100%" stop-color="#94a3b8"/>
-                    </linearGradient>
-                    <linearGradient id="goldGradient" x1="14" y1="13.5" x2="26" y2="26.5" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stop-color="#ffe066"/>
-                        <stop offset="50%" stop-color="#f5a623"/>
-                        <stop offset="100%" stop-color="#d97706"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-        </div>
-    </div>
+TON_Trader: Let's go TON hit 35x!!! 💎
+Not_King: Just cashed out at 4.5x on Notcoin! 🔥
+DOGS_Fan: Graph trajectories look solid.
 
-    <div class="hud-top-dashboard" id="hud-master-desk">
-        <div class="action-link-cluster">
-            <button class="nav-act-btn" onclick="triggerModal('Deposit')">Deposit</button>
-            <button class="nav-act-btn" onclick="triggerModal('Withdraw')">Withdraw</button>
-            <button class="nav-act-btn" onclick="triggerModal('Transactions')">Transactions</button>
-        </div>
-        <div class="wallet-display-cluster" id="wallet-anchor-zone">
-            <div class="hud-card card-true">
-                <span class="hud-label">💵 TRUE WALLET</span>
-                <div class="hud-val">$<span id="true-wallet-display">0.00</span></div>
-            </div>
-            <div class="hud-card card-bonus">
-                <span class="hud-label">🎁 BONUS WALLET</span>
-                <div class="hud-val">$<span id="bonus-wallet-display">0.00</span></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="phone-body">
-        <div id="page-1" class="page active-page">
-            <div class="progress-container">
-                <div class="bar-wrapper">
-                    <div class="bar-label"><span>Daily Mining limit</span><span id="daily-text-val">0 / 300</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="daily-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
-                </div>
-                <div class="bar-wrapper">
-                    <div class="bar-label"><span>Task Progress bundle</span><span id="task-text-val">0 / 10</span></div>
-                    <div class="outer-bar"><div class="inner-bar" id="task-progress-bar" style="background: linear-gradient(90deg, #ff9800, #ff5722); width:0%;"></div></div>
-                </div>
-            </div>
-            <div class="tap-container">
-                <div class="tap-zone" id="x-node-core">X</div>
-            </div>
-            <p class="msg-desc">Earn first wager package within 1 minute & ready to place bet.</p>
-            <button class="launch-btn" onclick="switchPage(2)">Launch Terminal 🚀</button>
-            <div class="footer-row">
-                <span class="foot-link" onclick="triggerModal('Referrals')">👥 Refer & Earn</span>
-                <span class="foot-link" onclick="triggerModal('Support')">❓ Help & Support</span>
-            </div>
-        </div>
-        
-        <div id="page-2" class="page">
-            <div class="arena-subheader">
-                <button class="nav-act-btn" style="background:#e63946; color:white; border:none; padding:3px 10px; height:24px; font-size:10px; display:flex; align-items:center;" onclick="switchPage(1)">◀ Back</button>
-                <span style="font-size:10px; font-weight:900; color:#475569; letter-spacing:0.5px; text-transform:uppercase;">Crypto X Arena</span>
-            </div>
-            
-            <div class="chart-card" id="card-TON">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #00a6ff;">💎 TON Engine</span>
-                    <span class="mult-val" id="val-TON" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-TON"></div>
-                <canvas class="canvas-box" id="canvas-TON" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-TON" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-TON">OPEN MARGIN</button>
-                </div>
-            </div>
-            
-            <div class="chart-card" id="card-NOT">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #eab308;">🚀 NOT Canvas</span>
-                    <span class="mult-val" id="val-NOT" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-NOT"></div>
-                <canvas class="canvas-box" id="canvas-NOT" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-NOT" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-NOT">OPEN MARGIN</button>
-                </div>
-            </div>
-            
-            <div class="chart-card" id="card-DOGS">
-                <div class="chart-header">
-                    <span class="coin-badge" style="color: #f6465d;">🐶 DOGS Arena</span>
-                    <span class="mult-val" id="val-DOGS" style="color:#10b981;">1.00x</span>
-                </div>
-                <div class="history-strip" id="hist-DOGS"></div>
-                <canvas class="canvas-box" id="canvas-DOGS" width="360" height="75"></canvas>
-                <div class="bet-desk-grid">
-                    <div class="input-row-wrap">
-                        <input type="number" id="input-DOGS" class="stake-inp" value="0.10" min="0.01" step="0.01">
-                    </div>
-                    <button class="wide-action-btn" id="btn-DOGS">OPEN MARGIN</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    const eventSource = new EventSource('/stream');
-    let trueWalletBal = 0.00; let bonusWalletBal = 0.00;
-    let dailyTaps = 0; let taskTaps = 0;
-    let roomStates = {
-        TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
-        NOT: { hasBet: false, amt: 0, pts: [], color: '#eab308', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
-        DOGS: { hasBet: false, amt: 0, pts: [], color: '#f6465d', isCashedOut: false, cashedOutY: 0, offsetX: 0 }
-    };
+Send
 
-    let audioCtx = null;
-    function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
-    
-    function playSynthSound(freq, type, duration, vol) {
-        initAudio(); try {
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
-        } catch(e) {}
-    }
-    function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
-    function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
-    function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
+
+
+💳 CRYPTO WALLET
+Deposit
+Withdraw
+
+
+
+💵 TRUE BALANCE
+$0.00
+
+
+🎁 X WALLET
+🔥 Play & Practice Balance
+$0.00
+
+
+Daily Mining limit0 / 300
+
+
+
+Task Progress bundle0 / 10
+
+
+
+
+X
+
+Earn first wager package within 1 minute & ready to place bet.
+Launch Terminal 🚀
+
+👥 Refer & Earn
+❓ Help & Support
+
+◀ Back
+Crypto X Arena
+💎 TON Engine
+1.00x
+
+
+
+
+
+
+
+OPEN MARGIN
+
+
+
+
+🚀 NOT Canvas
+1.00x
+
+
+
+
+
+
+
+OPEN MARGIN
+
+
+
+
+🪙 X-Coin Arena
+1.00x
+
+
+
+
+
+
+
+OPEN MARGIN
+
+
+
+
+const eventSource = new EventSource('onrender.com');
+let trueWalletBal = 0.00; let bonusWalletBal = 0.00;
+let dailyTaps = 0; let taskTaps = 0;
+let roomStates = {
+TON: { hasBet: false, amt: 0, pts: [], color: '#00a6ff', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+NOT: { hasBet: false, amt: 0, pts: [], color: '#eab308', isCashedOut: false, cashedOutY: 0, offsetX: 0 },
+XCOIN: { hasBet: false, amt: 0, pts: [], color: '#d97706', isCashedOut: false, cashedOutY: 0, offsetX: 0 }
+};
+let audioCtx = null;
+function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
+function playSynthSound(freq, type, duration, vol) {
+initAudio(); try {
+const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration);
+} catch(e) {}
+}
+function playTapSound() { playSynthSound(880, 'sine', 0.08, 0.2); }
+function playCashoutSound() { playSynthSound(587.33, 'triangle', 0.15, 0.25); setTimeout(() => playSynthSound(880, 'triangle', 0.25, 0.25), 80); }
+function playCrashSound() { playSynthSound(120, 'sawtooth', 0.4, 0.3); }
 function triggerCashoutHUDAlert(amount) {
 const anchor = document.getElementById('wallet-anchor-zone');
 const alertBox = document.createElement('div');
@@ -465,7 +342,6 @@ function closeModal() { document.getElementById('system-modal').style.display = 
 function switchPage(num) {
 document.getElementById('page-1').classList.toggle('active-page', num === 1);
 document.getElementById('page-2').classList.toggle('active-page', num === 2);
-document.getElementById('page-indicator').innerText = 'PAGE ' + num;
 }
 document.getElementById('x-node-core').onclick = (e) => {
 if(dailyTaps >= 300) return; dailyTaps++; taskTaps++; playTapSound();
@@ -517,6 +393,7 @@ if (mult < 10.00) return 'pill-pink';
 if (mult < 35.00) return 'pill-yellow';
 return 'pill-orange';
 }
+
 function triggerProvablyFairLogs(coin, mult, hash) {
 let explainText = `🛡️ PROVABLY FAIR VERIFICATION
 Asset Arena: ${coin}
@@ -559,7 +436,7 @@ roomStates[coin].hasBet = false; roomStates[coin].isCashedOut = false; drawCurve
 break;
 }
 };
-['TON', 'NOT', 'DOGS'].forEach(coin => {
+['TON', 'NOT', 'XCOIN'].forEach(coin => {
 const btn = document.getElementById('btn-' + coin); const input = document.getElementById('input-' + coin);
 btn.onclick = function() {
 initAudio();
@@ -584,5 +461,3 @@ if(state.pts.length > 0 && canvas) { state.cashedOutY = state.pts[state.pts.leng
 }
 };
 });
-
-    
